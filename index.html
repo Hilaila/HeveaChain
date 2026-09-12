@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HeveaChain V0.6</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#02070d;
+  color:#e8edf2;
+  min-height:100vh;
+}
+
+header{
+  padding:22px;
+  border-bottom:1px solid #1b2a36;
+  background:linear-gradient(180deg,#07111a,#02070d);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border:2px solid #d9a62e;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#ffd76a;
+  font-size:25px;
+  font-weight:bold;
+}
+
+h1{
+  font-size:24px;
+}
+
+.subtitle{
+  color:#8da0ad;
+  font-size:12px;
+  margin-top:3px;
+}
+
+.version{
+  display:inline-block;
+  margin-top:10px;
+  padding:5px 9px;
+  border:1px solid #6b5420;
+  color:#ffd76a;
+  font-size:11px;
+  border-radius:5px;
+}
+
+main{
+  max-width:1250px;
+  margin:auto;
+  padding:20px;
+}
+
+.hero{
+  padding:24px 0;
+}
+
+.hero h2{
+  font-size:32px;
+  margin-bottom:10px;
+}
+
+.hero p{
+  max-width:850px;
+  color:#aab8c2;
+  line-height:1.6;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:20px 0;
+}
+
+.stat{
+  background:#07111a;
+  border:1px solid #1a2a35;
+  border-radius:10px;
+  padding:15px;
+}
+
+.stat span{
+  display:block;
+  color:#81919d;
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+.stat strong{
+  font-size:22px;
+  color:#ffd76a;
+}
+
+.card{
+  background:#07111a;
+  border:1px solid #1a2a35;
+  border-radius:12px;
+  padding:18px;
+  margin-top:18px;
+}
+
+.card h3{
+  color:#ffd76a;
+  margin-bottom:12px;
+}
+
+canvas{
+  width:100%;
+  height:auto;
+  display:block;
+  background:#03090f;
+  border:1px solid #1c2c38;
+  border-radius:10px;
+}
+
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:14px;
+}
+
+button{
+  background:#0b1822;
+  color:#e8edf2;
+  border:1px solid #344653;
+  border-radius:7px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+button:hover{
+  border-color:#d9a62e;
+  color:#ffd76a;
+}
+
+button.active{
+  border-color:#d9a62e;
+  color:#02070d;
+  background:#d9a62e;
+}
+
+button.danger{
+  border-color:#8d3434;
+}
+
+.live{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:15px;
+}
+
+.liveBox{
+  border:1px solid #1d303c;
+  border-radius:8px;
+  padding:12px;
+}
+
+.liveBox span{
+  display:block;
+  font-size:11px;
+  color:#788b98;
+  margin-bottom:5px;
+}
+
+.liveBox strong{
+  color:#f2f5f7;
+}
+
+.architecture{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.module{
+  border:1px solid #1b2b36;
+  border-radius:10px;
+  padding:15px;
+  background:#040c13;
+}
+
+.module h4{
+  color:#ffd76a;
+  margin-bottom:10px;
+}
+
+.module ul{
+  padding-left:18px;
+  color:#a8b7c1;
+  line-height:1.8;
+  font-size:13px;
+}
+
+.agriGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.operation{
+  border:1px solid #1c303c;
+  border-radius:10px;
+  padding:15px;
+}
+
+.operationTitle{
+  color:#ffd76a;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.step{
+  padding:8px 10px;
+  margin:5px 0;
+  border-radius:5px;
+  background:#09151e;
+  color:#7f919c;
+  font-size:12px;
+}
+
+.step.active{
+  border-left:4px solid #ffd76a;
+  color:#ffd76a;
+  background:#111c24;
+}
+
+.step.done{
+  color:#8ed49a;
+}
+
+.badge{
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 9px;
+  border-radius:5px;
+  border:1px solid #344653;
+  font-size:11px;
+}
+
+.safe{
+  color:#8ed49a;
+  border-color:#396542;
+}
+
+.warning{
+  color:#ffd76a;
+  border-color:#735e29;
+}
+
+.dangerText{
+  color:#ff7b7b;
+  border-color:#793939;
+}
+
+.treeStates{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+.treeState{
+  background:#040b11;
+  border:1px solid #1c2b35;
+  border-radius:7px;
+  padding:10px;
+  text-align:center;
+}
+
+.treeState span{
+  display:block;
+  color:#778995;
+  font-size:10px;
+}
+
+.treeState strong{
+  display:block;
+  color:#ffd76a;
+  margin-top:4px;
+}
+
+.footer{
+  text-align:center;
+  padding:30px 10px;
+  color:#637581;
+  font-size:12px;
+}
+
+@media(max-width:850px){
+  .stats,
+  .live{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .architecture,
+  .agriGrid{
+    grid-template-columns:1fr;
+  }
+
+  .treeStates{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .hero h2{
+    font-size:25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">H</div>
+    <div>
+      <h1>HeveaChain</h1>
+      <div class="subtitle">ROBOT AUTONOME • PLANTATIONS</div>
+      <div class="version">HEVEACHAIN V0.6</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <h2>Le robot autonome inspiré de l’écureuil volant.</h2>
+  <p>
+    HeveaChain cartographie une plantation irrégulière, identifie les arbres,
+    évalue leur accessibilité, choisit automatiquement sa prochaine cible,
+    navigue vers elle, s'arrime au tronc et exécute une opération agricole
+    après vérification de sécurité.
+  </p>
+</section>
+
+<section class="stats">
+  <div class="stat">
+    <span>ARBRES DÉTECTÉS</span>
+    <strong id="detected">0</strong>
+  </div>
+
+  <div class="stat">
+    <span>ARBRES TRAITÉS</span>
+    <strong id="treated">0</strong>
+  </div>
+
+  <div class="stat">
+    <span>ARBRES RESTANTS</span>
+    <strong id="remaining">0</strong>
+  </div>
+
+  <div class="stat">
+    <span>ÉNERGIE</span>
+    <strong id="energy">100 %</strong>
+  </div>
+</section>
+
+<section class="card">
+  <h3>Simulation de plantation autonome</h3>
+
+  <canvas id="map" width="1100" height="560"></canvas>
+
+  <div class="controls">
+    <button id="startBtn">DÉMARRER</button>
+    <button id="pauseBtn">PAUSER</button>
+    <button id="resetBtn">RÉINITIALISER</button>
+    <button id="harvestBtn" class="active">RÉCOLTE</button>
+    <button id="tapBtn">SAIGNÉE — SIMULATION</button>
+    <button id="baseBtn">RETOUR BASE</button>
+    <button id="emergencyBtn" class="danger">ARRÊT D'URGENCE</button>
+  </div>
+
+  <div class="live">
+    <div class="liveBox">
+      <span>ÉTAT</span>
+      <strong id="state">ATTENTE</strong>
+    </div>
+
+    <div class="liveBox">
+      <span>CIBLE</span>
+      <strong id="target">T1</strong>
+    </div>
+
+    <div class="liveBox">
+      <span>PHASE</span>
+      <strong id="phase">ATTENTE</strong>
+    </div>
+
+    <div class="liveBox">
+      <span>MODE</span>
+      <strong id="mode">RÉCOLTE</strong>
+    </div>
+
+    <div class="liveBox">
+      <span>DISTANCE TRONC</span>
+      <strong id="distance">1.65 m</strong>
+    </div>
+
+    <div class="liveBox">
+      <span>POSITION X</span>
+      <strong id="posX">2.00 m</strong>
+    </div>
+
+    <div class="liveBox">
+      <span>POSITION Y</span>
+      <strong id="posY">2.00 m</strong>
+    </div>
+
+    <div class="liveBox">
+      <span>SÉCURITÉ</span>
+      <strong id="security">TRAITEMENT BLOQUÉ</strong>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h3>Intelligence autonome</h3>
+
+  <div class="architecture">
+
+    <div class="module">
+      <h4>1. CARTOGRAPHIE DYNAMIQUE</h4>
+      <ul>
+        <li>Détection des arbres</li>
+        <li>Position X / Y</li>
+        <li>Plantation irrégulière</li>
+        <li>État individuel de chaque arbre</li>
+        <li>Carte mise à jour en temps réel</li>
+      </ul>
+    </div>
+
+    <div class="module">
+      <h4>2. CHOIX INTELLIGENT DE CIBLE</h4>
+      <ul>
+        <li>Distance robot / arbre</li>
+        <li>Accessibilité</li>
+        <li>État de traitement</li>
+        <li>Score de priorité</li>
+        <li>Sélection automatique</li>
+      </ul>
+    </div>
+
+    <div class="module">
+      <h4>3. GESTION AUTONOME</h4>
+      <ul>
+        <li>Gestion de l'énergie</li>
+        <li>Retour automatique à la base</li>
+        <li>Reprise de mission</li>
+        <li>Mode urgence</li>
+        <li>Arrêt sécurisé</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="treeStates">
+
+    <div class="treeState">
+      <span>NON VISITÉS</span>
+      <strong id="sUnvisited">0</strong>
+    </div>
+
+    <div class="treeState">
+      <span>EN APPROCHE</span>
+      <strong id="sApproach">0</strong>
+    </div>
+
+    <div class="treeState">
+      <span>TRAITÉS</span>
+      <strong id="sTreated">0</strong>
+    </div>
+
+    <div class="treeState">
+      <span>INACCESSIBLES</span>
+      <strong id="sBlocked">0</strong>
+    </div>
+
+    <div class="treeState">
+      <span>ERREURS</span>
+      <strong id="sError">0</strong>
+    </div>
+
+  </div>
+
+  <div id="autonomyBadge" class="badge safe">
+    AUTONOMIE ACTIVE
+  </div>
+</section>
+
+<section class="card">
+  <h3>Docking sécurisé</h3>
+
+  <div class="architecture">
+
+    <div class="module">
+      <h4>SÉQUENCE</h4>
+
+      <div class="step" id="dock0">1. APPROCHE DU TRONC</div>
+      <div class="step" id="dock1">2. CONTACT TRONC</div>
+      <div class="step" id="dock2">3. STABILISATION</div>
+      <div class="step" id="dock3">4. ARRIMAGE MÉCANIQUE</div>
+      <div class="step" id="dock4">5. CONTRÔLE DE PRESSION</div>
+      <div class="step" id="dock5">6. VÉRIFICATION</div>
+    </div>
+
+    <div class="module">
+      <h4>CONTRÔLE DE SÉCURITÉ</h4>
+
+      <p id="dockStatus">Aucun arbre arrimé.</p>
+
+      <div class="badge" id="pressureBadge">
+        PRESSION : 0 %
+      </div>
+
+      <div class="badge" id="lockBadge">
+        ARRIMAGE : DÉVERROUILLÉ
+      </div>
+
+      <div class="badge" id="distanceBadge">
+        DISTANCE : 1.65 m
+      </div>
+    </div>
+
+    <div class="module">
+      <h4>DÉCISION AUTONOME</h4>
+
+      <p id="decisionText">
+        Recherche de la meilleure cible.
+      </p>
+
+      <div class="badge safe" id="targetScore">
+        SCORE CIBLE : —
+      </div>
+
+      <div class="badge" id="accessBadge">
+        ACCESSIBILITÉ : —
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="card">
+  <h3>Module agricole double fonction</h3>
+
+  <div class="agriGrid">
+
+    <div class="operation">
+
+      <div class="operationTitle">
+        OPÉRATION AGRICOLE
+      </div>
+
+      <div class="step" id="agri0">
+        1. POSITIONNEMENT DE L'OUTIL
+      </div>
+
+      <div class="step" id="agri1">
+        2. DÉTECTION DE LA ZONE
+      </div>
+
+      <div class="step" id="agri2">
+        3. VÉRIFICATION
+      </div>
+
+      <div class="step" id="agri3">
+        4. OPÉRATION AGRICOLE
+      </div>
+
+      <div class="step" id="agri4">
+        5. CONTRÔLE
+      </div>
+
+      <div class="step" id="agri5">
+        6. FIN D'OPÉRATION
+      </div>
+
+      <div class="badge" id="toolStatus">
+        OUTIL DÉCONNECTÉ
+      </div>
+
+      <div class="badge" id="operationStatus">
+        OPÉRATION : AUCUNE
+      </div>
+
+    </div>
+
+    <div class="operation">
+
+      <div class="operationTitle">
+        RÉCOLTE DU FOND DE TASSE
+      </div>
+
+      <p id="cupDetection">
+        Détection tasse : EN ATTENTE
+      </p>
+
+      <p id="armStatus">
+        Bras : REPLIÉ
+      </p>
+
+      <p id="collectionStatus">
+        Collecte : INACTIVE
+      </p>
+
+      <br>
+
+      <div class="operationTitle">
+        SAIGNÉE
+      </div>
+
+      <p id="panelStatus">
+        Panneau : EN ATTENTE
+      </p>
+
+      <p id="tapStatus">
+        Simulation : INACTIVE
+      </p>
+
+      <div class="badge warning">
+        SAIGNÉE PHYSIQUE NON ACTIVÉE
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="card">
+  <h3>Cycle autonome V0.6</h3>
+
+  <div class="architecture">
+
+    <div class="module">
+      <h4>NAVIGATION</h4>
+      <ul>
+        <li>Carte de plantation</li>
+        <li>Choix de cible</li>
+        <li>Calcul du score</li>
+        <li>Approche dynamique</li>
+      </ul>
+    </div>
+
+    <div class="module">
+      <h4>ARRIMAGE</h4>
+      <ul>
+        <li>Contact tronc</li>
+        <li>Stabilisation</li>
+        <li>Verrouillage mécanique</li>
+        <li>Contrôle pression / distance</li>
+      </ul>
+    </div>
+
+    <div class="module">
+      <h4>MISSION</h4>
+      <ul>
+        <li>Opération agricole</li>
+        <li>Vérification</li>
+        <li>Désarrimage</li>
+        <li>Arbre suivant</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<div class="footer">
+  HeveaChain — V0.6 — Prototype logiciel d'autonomie robotique agricole
+</div>
+
+<script>
+
+const canvas = document.getElementById("map");
+const ctx = canvas.getContext("2d");
+
+let trees = [];
+let robot = {
+  x:2,
+  y:2
+};
+
+let target = null;
+
+let running = false;
+let emergency = false;
+
+let state = "ATTENTE";
+let phase = "ATTENTE";
+
+let mode = "RÉCOLTE";
+
+let dockingStart = 0;
+let agricultureStart = 0;
+let releaseStart = 0;
+
+let dockingVerified = false;
+let mechanicalLocked = false;
+let contactReached = false;
+
+let pressure = 0;
+let trunkDistance = 1.65;
+
+let operationStep = -1;
+
+let energy = 100;
+
+let returnToBase = false;
+let baseMode = false;
+
+let lastTime = performance.now();
+
+const BASE = {
+  x:2,
+  y:2
+};
+
+const DOCK_TIME = 4500;
+const AGRICULTURE_TIME = 6000;
+const RELEASE_TIME = 1000;
+
+function distance(a,b){
+  return Math.hypot(a.x-b.x,a.y-b.y);
+}
+
+function generatePlantation(){
+
+  trees=[];
+
+  let id=1;
+
+  for(let y=5;y<=51;y+=7.5){
+
+    for(let x=5;x<=94;x+=7){
+
+      let jitterX=(Math.random()-0.5)*2.5;
+      let jitterY=(Math.random()-0.5)*2.5;
+
+      let accessibility=Math.random();
+
+      trees.push({
+        id:"T"+id,
+        x:x+jitterX,
+        y:y+jitterY,
+        status:"NON VISITÉ",
+        accessibility:accessibility,
+        treated:false,
+        error:false
+      });
+
+      id++;
+    }
+  }
+
+  trees=trees.slice(0,91);
+}
+
+function getCounts(){
+
+  let unvisited=0;
+  let approach=0;
+  let treated=0;
+  let blocked=0;
+  let error=0;
+
+  trees.forEach(t=>{
+
+    if(t.status==="NON VISITÉ") unvisited++;
+
+    if(
+      t.status==="EN APPROCHE" ||
+      t.status==="ARRIVÉ"
+    ) approach++;
+
+    if(t.status==="TRAITÉ") treated++;
+
+    if(t.status==="INACCESSIBLE") blocked++;
+
+    if(t.status==="ERREUR") error++;
+
+  });
+
+  return {
+    unvisited,
+    approach,
+    treated,
+    blocked,
+    error
+  };
+}
+
+/*
+  SCORE AUTONOME
+
+  Le robot privilégie :
+  - les arbres accessibles
+  - les arbres proches
+  - les arbres non traités
+
+  Le score n'impose pas une grille parfaite.
+*/
+
+function calculateScore(tree){
+
+  let d=distance(robot,tree);
+
+  let distanceScore=Math.max(0,100-(d*2));
+
+  let accessibilityScore=tree.accessibility*100;
+
+  let randomVariation=Math.random()*8;
+
+  return (
+    distanceScore*0.55 +
+    accessibilityScore*0.45 +
+    randomVariation
+  );
+}
+
+function selectNextTarget(){
+
+  let candidates=trees.filter(t=>
+    t.status==="NON VISITÉ" &&
+    !t.treated &&
+    !t.error
+  );
+
+  if(candidates.length===0){
+
+    target=null;
+    return null;
+  }
+
+  let best=null;
+  let bestScore=-Infinity;
+
+  candidates.forEach(tree=>{
+
+    let score=calculateScore(tree);
+
+    if(score>bestScore){
+
+      bestScore=score;
+      best=tree;
+      best._score=score;
+    }
+
+  });
+
+  target=best;
+
+  if(target){
+
+    target.status="EN APPROCHE";
+
+    document.getElementById("decisionText").textContent=
+      "Nouvelle cible sélectionnée automatiquement : "+target.id;
+
+    document.getElementById("targetScore").textContent=
+      "SCORE CIBLE : "+target._score.toFixed(1);
+
+    document.getElementById("accessBadge").textContent=
+      "ACCESSIBILITÉ : "+Math.round(target.accessibility*100)+" %";
+  }
+
+  return target;
+}
+
+function startMission(){
+
+  if(emergency) return;
+
+  if(state==="TERMINÉ"){
+
+    resetMission();
+  }
+
+  if(!target){
+    selectNextTarget();
+  }
+
+  running=true;
+  baseMode=false;
+  returnToBase=false;
+
+  state="NAVIGATION";
+  phase="NAVIGATION";
+
+  lastTime=performance.now();
+}
+
+function pauseMission(){
+
+  running=false;
+}
+
+function resetMission(){
+
+  running=false;
+  emergency=false;
+
+  robot.x=2;
+  robot.y=2;
+
+  energy=100;
+
+  state="ATTENTE";
+  phase="ATTENTE";
+
+  pressure=0;
+  trunkDistance=1.65;
+
+  dockingVerified=false;
+  mechanicalLocked=false;
+  contactReached=false;
+
+  operationStep=-1;
+
+  returnToBase=false;
+  baseMode=false;
+
+  generatePlantation();
+
+  selectNextTarget();
+
+  resetAgricultureVisual();
+  resetDockingVisual();
+
+  updateUI();
+}
+
+function activateEmergency(){
+
+  running=false;
+  emergency=true;
+
+  state="URGENCE";
+  phase="ARRÊT D'URGENCE";
+
+  pressure=0;
+
+  mechanicalLocked=false;
+  contactReached=false;
+  dockingVerified=false;
+
+  operationStep=-1;
+
+  document.getElementById("autonomyBadge").textContent=
+    "ARRÊT D'URGENCE — ROBOT IMMOBILISÉ";
+
+  document.getElementById("autonomyBadge").className=
+    "badge dangerText";
+
+  updateUI();
+}
+
+function requestBase(){
+
+  if(emergency) return;
+
+  returnToBase=true;
+  baseMode=true;
+
+  running=true;
+
+  state="RETOUR BASE";
+  phase="RETOUR BASE";
+
+  target=null;
+}
+
+function navigate(now){
+
+  if(!target){
+
+    selectNextTarget();
+
+    if(!target){
+      finishMission();
+      return;
+    }
+  }
+
+  let dx=target.x-robot.x;
+  let dy=target.y-robot.y;
+
+  let d=Math.hypot(dx,dy);
+
+  if(d<0.35){
+
+    robot.x=target.x;
+    robot.y=target.y;
+
+    target.status="ARRIVÉ";
+
+    state="DOCKING";
+    phase="APPROCHE DU TRONC";
+
+    dockingStart=now;
+
+    pressure=0;
+    trunkDistance=d;
+
+    contactReached=false;
+    mechanicalLocked=false;
+    dockingVerified=false;
+
+    return;
+  }
+
+  let speed=6.0;
+
+  let dt=Math.min((now-lastTime)/1000,0.05);
+
+  robot.x += dx/d*speed*dt;
+  robot.y += dy/d*speed*dt;
+
+  energy-=0.003;
+}
+
+function docking(now){
+
+  if(!target){
+
+    state="NAVIGATION";
+    return;
+  }
+
+  let elapsed=now-dockingStart;
+
+  trunkDistance=Math.max(0.03,1.65-(elapsed/4500)*1.62);
+
+  if(elapsed<800){
+
+    phase="APPROCHE DU TRONC";
+    updateDockingStep(0);
+  }
+
+  else if(elapsed<1500){
+
+    phase="CONTACT TRONC";
+    contactReached=true;
+    updateDockingStep(1);
+  }
+
+  else if(elapsed<2300){
+
+    phase="STABILISATION";
+    updateDockingStep(2);
+  }
+
+  else if(elapsed<3100){
+
+    phase="ARRIMAGE MÉCANIQUE";
+
+    mechanicalLocked=true;
+
+    updateDockingStep(3);
+  }
+
+  else if(elapsed<3900){
+
+    phase="CONTRÔLE DE PRESSION";
+
+    pressure=Math.min(
+      100,
+      ((elapsed-3100)/800)*100
+    );
+
+    updateDockingStep(4);
+  }
+
+  else if(elapsed<DOCK_TIME){
+
+    phase="VÉRIFICATION";
+
+    pressure=100;
+
+    updateDockingStep(5);
+  }
+
+  else{
+
+    pressure=100;
+    trunkDistance=0.03;
+
+    dockingVerified=
+      contactReached &&
+      mechanicalLocked &&
+      pressure>=90 &&
+      trunkDistance<=0.05;
+
+    if(dockingVerified){
+
+      state="AGRICULTURE";
+      phase="POSITIONNEMENT DE L'OUTIL";
+
+      agricultureStart=now;
+      operationStep=0;
+
+      updateAgricultureStep(0);
+
+    }else{
+
+      target.status="ERREUR";
+
+      state="NAVIGATION";
+      phase="ÉCHEC DOCKING";
+
+      pressure=0;
+
+      selectNextTarget();
+    }
+  }
+}
+
+function agriculture(now){
+
+  if(!target) return;
+
+  if(!dockingVerified || !mechanicalLocked){
+
+    state="URGENCE";
+    phase="SÉCURITÉ — OPÉRATION BLOQUÉE";
+
+    running=false;
+    return;
+  }
+
+  let elapsed=now-agricultureStart;
+
+  let step=Math.floor(elapsed/1000);
+
+  if(step>5) step=5;
+
+  operationStep=step;
+
+  updateAgricultureStep(step);
+
+  if(mode==="RÉCOLTE"){
+
+    if(step>=1){
+      document.getElementById("cupDetection").textContent=
+        "Détection tasse : TASSE DÉTECTÉE";
+    }
+
+    if(step>=2){
+      document.getElementById("armStatus").textContent=
+        "Bras : POSITIONNÉ";
+    }
+
+    if(step>=3){
+      document.getElementById("collectionStatus").textContent=
+        "Collecte : EN COURS";
+    }
+
+    if(step>=4){
+      document.getElementById("collectionStatus").textContent=
+        "Collecte : COLLECTE VÉRIFIÉE";
+    }
+
+  }else{
+
+    if(step>=1){
+      document.getElementById("panelStatus").textContent=
+        "Panneau : ZONE IDENTIFIÉE";
+    }
+
+    if(step>=2){
+      document.getElementById("tapStatus").textContent=
+        "Simulation : OUTIL POSITIONNÉ";
+    }
+
+    if(step>=3){
+      document.getElementById("tapStatus").textContent=
+        "Simulation : OPÉRATION EN COURS";
+    }
+
+    if(step>=4){
+      document.getElementById("tapStatus").textContent=
+        "Simulation : CONTRÔLE TERMINÉ";
+    }
+  }
+
+  if(elapsed>=AGRICULTURE_TIME){
+
+    target.treated=true;
+    target.status="TRAITÉ";
+
+    state="RELEASE";
+    phase="DÉSARRIMAGE";
+
+    releaseStart=now;
+
+    operationStep=5;
+  }
+}
+
+function releaseRobot(now){
+
+  let elapsed=now-releaseStart;
+
+  phase="DÉSARRIMAGE";
+
+  pressure=Math.max(0,100-(elapsed/RELEASE_TIME)*100);
+
+  if(elapsed>=RELEASE_TIME){
+
+    mechanicalLocked=false;
+    contactReached=false;
+    dockingVerified=false;
+
+    pressure=0;
+    trunkDistance=1.65;
+
+    target=null;
+
+    let counts=getCounts();
+
+    if(counts.unvisited===0){
+
+      finishMission();
+      return;
+    }
+
+    state="NAVIGATION";
+    phase="ARBRE SUIVANT";
+
+    selectNextTarget();
+  }
+}
+
+function returnBase(now){
+
+  let dx=BASE.x-robot.x;
+  let dy=BASE.y-robot.y;
+
+  let d=Math.hypot(dx,dy);
+
+  if(d<0.3){
+
+    robot.x=BASE.x;
+    robot.y=BASE.y;
+
+    running=false;
+
+    baseMode=false;
+    returnToBase=false;
+
+    state="BASE";
+    phase="CHARGE";
+
+    energy=Math.min(100,energy+30);
+
+    return;
+  }
+
+  let speed=7;
+
+  let dt=Math.min((now-lastTime)/1000,0.05);
+
+  robot.x+=dx/d*speed*dt;
+  robot.y+=dy/d*speed*dt;
+
+  energy-=0.002;
+}
+
+function finishMission(){
+
+  running=false;
+
+  target=null;
+
+  state="TERMINÉ";
+  phase="MISSION TERMINÉE";
+
+  pressure=0;
+  trunkDistance=0;
+
+  mechanicalLocked=false;
+  contactReached=false;
+  dockingVerified=false;
+
+  operationStep=5;
+
+  document.getElementById("dockStatus").textContent=
+    "MISSION TERMINÉE — AUCUN ARBRE ARRIMÉ";
+
+  document.getElementById("operationStatus").textContent=
+    "OPÉRATION : MISSION TERMINÉE";
+
+  document.getElementById("toolStatus").textContent=
+    "OUTIL DÉCONNECTÉ";
+}
+
+function updateDockingStep(step){
+
+  for(let i=0;i<6;i++){
+
+    let el=document.getElementById("dock"+i);
+
+    el.classList.remove("active","done");
+
+    if(i<step) el.classList.add("done");
+    if(i===step) el.classList.add("active");
+  }
+
+  if(state==="TERMINÉ"){
+
+    for(let i=0;i<6;i++){
+      document.getElementById("dock"+i)
+        .classList.add("done");
+    }
+  }
+}
+
+function resetDockingVisual(){
+
+  for(let i=0;i<6;i++){
+
+    document.getElementById("dock"+i)
+      .classList.remove("active","done");
+  }
+
+  document.getElementById("dockStatus").textContent=
+    "Aucun arbre arrimé.";
+
+  document.getElementById("pressureBadge").textContent=
+    "PRESSION : 0 %";
+
+  document.getElementById("lockBadge").textContent=
+    "ARRIMAGE : DÉVERROUILLÉ";
+
+  document.getElementById("distanceBadge").textContent=
+    "DISTANCE : 1.65 m";
+}
+
+function updateAgricultureStep(step){
+
+  for(let i=0;i<6;i++){
+
+    let el=document.getElementById("agri"+i);
+
+    el.classList.remove("active","done");
+
+    if(i<step) el.classList.add("done");
+    if(i===step) el.classList.add("active");
+  }
+
+  document.getElementById("toolStatus").textContent=
+    "OUTIL "+
+    (mode==="RÉCOLTE" ? "RÉCOLTE" : "SAIGNÉE")+
+    " CONNECTÉ";
+
+  document.getElementById("operationStatus").textContent=
+    "OPÉRATION : EN COURS";
+}
+
+function resetAgricultureVisual(){
+
+  for(let i=0;i<6;i++){
+
+    document.getElementById("agri"+i)
+      .classList.remove("active","done");
+  }
+
+  document.getElementById("toolStatus").textContent=
+    "OUTIL DÉCONNECTÉ";
+
+  document.getElementById("operationStatus").textContent=
+    "OPÉRATION : AUCUNE";
+
+  document.getElementById("cupDetection").textContent=
+    "Détection tasse : EN ATTENTE";
+
+  document.getElementById("armStatus").textContent=
+    "Bras : REPLIÉ";
+
+  document.getElementById("collectionStatus").textContent=
+    "Collecte : INACTIVE";
+
+  document.getElementById("panelStatus").textContent=
+    "Panneau : EN ATTENTE";
+
+  document.getElementById("tapStatus").textContent=
+    "Simulation : INACTIVE";
+}
+
+function updateUI(){
+
+  let counts=getCounts();
+
+  document.getElementById("detected").textContent=
+    trees.length;
+
+  document.getElementById("treated").textContent=
+    counts.treated;
+
+  document.getElementById("remaining").textContent=
+    counts.unvisited;
+
+  document.getElementById("energy").textContent=
+    Math.max(0,energy).toFixed(0)+" %";
+
+  document.getElementById("state").textContent=
+    state;
+
+  document.getElementById("target").textContent=
+    target ? target.id : "—";
+
+  document.getElementById("phase").textContent=
+    phase;
+
+  document.getElementById("mode").textContent=
+    mode;
+
+  document.getElementById("distance").textContent=
+    trunkDistance>0 ?
+    trunkDistance.toFixed(2)+" m" :
+    "—";
+
+  document.getElementById("posX").textContent=
+    robot.x.toFixed(2)+" m";
+
+  document.getElementById("posY").textContent=
+    robot.y.toFixed(2)+" m";
+
+  let safe=
+    state!=="TERMINÉ" &&
+    state!=="URGENCE" &&
+    dockingVerified &&
+    mechanicalLocked &&
+    contactReached &&
+    pressure>=90 &&
+    trunkDistance<=0.05;
+
+  document.getElementById("security").textContent=
+    state==="TERMINÉ"
+      ? "TRAITEMENT NON ACTIF"
+      : safe
+        ? "TRAITEMENT AUTORISÉ"
+        : "TRAITEMENT BLOQUÉ";
+
+  document.getElementById("pressureBadge").textContent=
+    "PRESSION : "+pressure.toFixed(0)+" %";
+
+  document.getElementById("lockBadge").textContent=
+    "ARRIMAGE : "+
+    (mechanicalLocked ? "VERROUILLÉ" : "DÉVERROUILLÉ");
+
+  document.getElementById("distanceBadge").textContent=
+    "DISTANCE : "+
+    trunkDistance.toFixed(2)+" m";
+
+  document.getElementById("sUnvisited").textContent=
+    counts.unvisited;
+
+  document.getElementById("sApproach").textContent=
+    counts.approach;
+
+  document.getElementById("sTreated").textContent=
+    counts.treated;
+
+  document.getElementById("sBlocked").textContent=
+    counts.blocked;
+
+  document.getElementById("sError").textContent=
+    counts.error;
+
+  if(state==="TERMINÉ"){
+
+    document.getElementById("autonomyBadge").textContent=
+      "MISSION TERMINÉE — ROBOT EN SÉCURITÉ";
+
+    document.getElementById("autonomyBadge").className=
+      "badge safe";
+
+  }else if(state==="URGENCE"){
+
+    document.getElementById("autonomyBadge").textContent=
+      "ARRÊT D'URGENCE — ROBOT IMMOBILISÉ";
+
+    document.getElementById("autonomyBadge").className=
+      "badge dangerText";
+
+  }else{
+
+    document.getElementById("autonomyBadge").textContent=
+      "AUTONOMIE ACTIVE";
+
+    document.getElementById("autonomyBadge").className=
+      "badge safe";
+  }
+
+  if(target){
+
+    document.getElementById("targetScore").textContent=
+      "SCORE CIBLE : "+
+      (target._score || 0).toFixed(1);
+
+    document.getElementById("accessBadge").textContent=
+      "ACCESSIBILITÉ : "+
+      Math.round(target.accessibility*100)+" %";
+  }else{
+
+    document.getElementById("targetScore").textContent=
+      "SCORE CIBLE : —";
+
+    document.getElementById("accessBadge").textContent=
+      "ACCESSIBILITÉ : —";
+  }
+
+  if(state==="TERMINÉ"){
+
+    updateDockingStep(6);
+
+  }
+
+  updateModeButtons();
+}
+
+function updateModeButtons(){
+
+  document.getElementById("harvestBtn")
+    .classList.toggle("active",mode==="RÉCOLTE");
+
+  document.getElementById("tapBtn")
+    .classList.toggle("active",mode==="SAIGNÉE");
+}
+
+function setMode(newMode){
+
+  if(state==="AGRICULTURE" || state==="DOCKING"){
+    return;
+  }
+
+  mode=newMode;
+
+  resetAgricultureVisual();
+
+  updateUI();
+}
+
+function draw(){
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  const scaleX=canvas.width/100;
+  const scaleY=canvas.height/60;
+
+  /*
+    Grille de plantation
+  */
+
+  ctx.strokeStyle="#0c1a23";
+  ctx.lineWidth=1;
+
+  for(let x=0;x<=100;x+=5){
+
+    ctx.beginPath();
+    ctx.moveTo(x*scaleX,0);
+    ctx.lineTo(x*scaleX,canvas.height);
+    ctx.stroke();
+  }
+
+  for(let y=0;y<=60;y+=5){
+
+    ctx.beginPath();
+    ctx.moveTo(0,y*scaleY);
+    ctx.lineTo(canvas.width,y*scaleY);
+    ctx.stroke();
+  }
+
+  /*
+    Route vers la cible
+  */
+
+  if(target){
+
+    ctx.strokeStyle="#d9a62e";
+    ctx.lineWidth=2;
+    ctx.setLineDash([7,6]);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      robot.x*scaleX,
+      robot.y*scaleY
+    );
+
+    ctx.lineTo(
+      target.x*scaleX,
+      target.y*scaleY
+    );
+
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+  }
+
+  /*
+    Arbres
+  */
+
+  trees.forEach(tree=>{
+
+    let x=tree.x*scaleX;
+    let y=tree.y*scaleY;
+
+    let radius=7;
+
+    if(tree.status==="TRAITÉ"){
+      ctx.fillStyle="#274f35";
+    }else if(tree.status==="INACCESSIBLE"){
+      ctx.fillStyle="#653434";
+    }else if(tree.status==="ERREUR"){
+      ctx.fillStyle="#7a2727";
+    }else{
+      ctx.fillStyle="#3c633f";
+    }
+
+    ctx.beginPath();
+    ctx.arc(x,y,radius,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.strokeStyle="#8bb16c";
+    ctx.stroke();
+
+    if(target && tree.id===target.id){
+
+      ctx.strokeStyle="#ffd76a";
+      ctx.lineWidth=3;
+
+      ctx.beginPath();
+      ctx.arc(x,y,12,0,Math.PI*2);
+      ctx.stroke();
+    }
+  });
+
+  /*
+    Robot
+  */
+
+  let rx=robot.x*scaleX;
+  let ry=robot.y*scaleY;
+
+  ctx.fillStyle="#ffd76a";
+
+  ctx.beginPath();
+  ctx.arc(rx,ry,9,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.strokeStyle="#ffffff";
+  ctx.lineWidth=2;
+
+  ctx.beginPath();
+  ctx.arc(rx,ry,13,0,Math.PI*2);
+  ctx.stroke();
+
+  /*
+    Bras / outil lorsqu'arrimé
+  */
+
+  if(
+    state==="DOCKING" ||
+    state==="AGRICULTURE"
+  ){
+
+    ctx.strokeStyle="#ffd76a";
+    ctx.lineWidth=4;
+
+    ctx.beginPath();
+    ctx.moveTo(rx+6,ry);
+    ctx.lineTo(rx+18,ry+8);
+    ctx.lineTo(rx+27,ry+3);
+    ctx.stroke();
+
+    ctx.fillStyle="#d9a62e";
+
+    ctx.beginPath();
+    ctx.arc(rx+27,ry+3,5,0,Math.PI*2);
+    ctx.fill();
+  }
+
+  /*
+    Base
+  */
+
+  let bx=BASE.x*scaleX;
+  let by=BASE.y*scaleY;
+
+  ctx.strokeStyle="#78a7c2";
+  ctx.lineWidth=2;
+
+  ctx.strokeRect(
+    bx-12,
+    by-12,
+    24,
+    24
+  );
+
+  ctx.fillStyle="#78a7c2";
+
+  ctx.font="11px Arial";
+
+  ctx.fillText(
+    "BASE",
+    bx+15,
+    by+4
+  );
+
+  /*
+    Texte d'état
+  */
+
+  ctx.fillStyle="#ffd76a";
+  ctx.font="bold 14px Arial";
+
+  ctx.fillText(
+    "ÉTAT : "+state,
+    18,
+    25
+  );
+
+  ctx.fillStyle="#8da0ad";
+  ctx.font="12px Arial";
+
+  ctx.fillText(
+    "Énergie : "+Math.max(0,energy).toFixed(0)+" %",
+    18,
+    44
+  );
+}
+
+function loop(now){
+
+  let dt=Math.min(
+    (now-lastTime)/1000,
+    0.1
+  );
+
+  lastTime=now;
+
+  if(running && !emergency){
+
+    /*
+      Sécurité énergie
+    */
+
+    if(
+      energy<=15 &&
+      state!=="RETOUR BASE" &&
+      state!=="BASE"
+    ){
+
+      requestBase();
+    }
+
+    if(state==="NAVIGATION"){
+
+      if(returnToBase){
+        returnBase(now);
+      }else{
+        navigate(now);
+      }
+
+    }else if(state==="DOCKING"){
+
+      docking(now);
+
+    }else if(state==="AGRICULTURE"){
+
+      agriculture(now);
+
+    }else if(state==="RELEASE"){
+
+      releaseRobot(now);
+
+    }else if(state==="RETOUR BASE"){
+
+      returnBase(now);
+    }
+  }
+
+  updateUI();
+  draw();
+
+  requestAnimationFrame(loop);
+}
+
+/*
+  Boutons
+*/
+
+document.getElementById("startBtn")
+  .addEventListener("click",startMission);
+
+document.getElementById("pauseBtn")
+  .addEventListener("click",pauseMission);
+
+document.getElementById("resetBtn")
+  .addEventListener("click",resetMission);
+
+document.getElementById("harvestBtn")
+  .addEventListener("click",()=>{
+    setMode("RÉCOLTE");
+  });
+
+document.getElementById("tapBtn")
+  .addEventListener("click",()=>{
+    setMode("SAIGNÉE");
+  });
+
+document.getElementById("baseBtn")
+  .addEventListener("click",requestBase);
+
+document.getElementById("emergencyBtn")
+  .addEventListener("click",activateEmergency);
+
+/*
+  Initialisation
+*/
+
+generatePlantation();
+
+selectNextTarget();
+
+updateUI();
+
+draw();
+
+requestAnimationFrame(loop);
+
+</script>
+
+</body>
+</html>
