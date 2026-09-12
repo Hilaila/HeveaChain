@@ -1,0 +1,2659 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HeveaChain V0.7.2</title>
+
+<style>
+:root{
+  --bg:#02070d;
+  --card:#07121c;
+  --card2:#0a1722;
+  --gold:#d9a62e;
+  --gold2:#ffd76a;
+  --green:#45d483;
+  --red:#ff5c5c;
+  --blue:#54a9ff;
+  --orange:#ff9e3d;
+  --muted:#8da0af;
+  --text:#eef5f8;
+  --border:rgba(255,255,255,.08)
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#0a1721 0,#02070d 45%,#010408 100%);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+header{
+  padding:18px 5%;
+  border-bottom:1px solid var(--border);
+  background:rgba(2,7,13,.92);
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:20px;
+  font-weight:bold;
+}
+.logo{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#111;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  font-weight:900;
+}
+.brand small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:1px;
+  margin-top:3px;
+}
+main{
+  width:min(1180px,94%);
+  margin:auto;
+  padding:28px 0 50px;
+}
+.hero{
+  padding:20px 0 28px;
+}
+.eyebrow{
+  color:var(--gold2);
+  font-size:13px;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+h1{
+  font-size:clamp(30px,5vw,52px);
+  margin:12px 0;
+  line-height:1.05;
+}
+h2{
+  margin-top:28px;
+  color:var(--gold2);
+}
+h3{
+  color:var(--gold2);
+}
+.hero p,.card p{
+  color:var(--muted);
+  line-height:1.65;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+}
+.card{
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+}
+.stat-number{
+  color:var(--gold2);
+  font-size:27px;
+  font-weight:bold;
+}
+.stat-label{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+.simulator{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:14px;
+}
+.map-wrapper{
+  position:relative;
+  background:#030a10;
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  min-height:430px;
+}
+canvas{
+  width:100%;
+  height:430px;
+  display:block;
+}
+.legend{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  right:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  background:rgba(0,0,0,.62);
+  padding:9px;
+  border-radius:9px;
+  font-size:11px;
+}
+.dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:4px;
+}
+.green{background:var(--green)}
+.gold{background:var(--gold)}
+.orange{background:var(--orange)}
+.blue{background:var(--blue)}
+.red{background:var(--red)}
+button{
+  width:100%;
+  border:1px solid var(--gold);
+  border-radius:9px;
+  padding:11px;
+  margin-bottom:8px;
+  background:rgba(217,166,46,.08);
+  color:var(--gold2);
+  font-weight:bold;
+  cursor:pointer;
+}
+button:hover{background:rgba(217,166,46,.18)}
+button.primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+button.danger{
+  border-color:var(--red);
+  color:#ff8b8b;
+}
+.info{
+  border-top:1px solid var(--border);
+  padding-top:8px;
+  margin-top:5px;
+}
+.info-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.035);
+  font-size:12px;
+}
+.info-row span{color:var(--muted)}
+.status{color:var(--green)}
+.architecture{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.architecture .card{min-height:200px}
+.mini-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+.mini{
+  padding:9px;
+  border-radius:8px;
+  background:rgba(255,255,255,.035);
+  font-size:12px;
+}
+.mini span{
+  display:block;
+  color:var(--muted);
+  margin-bottom:3px;
+}
+.phase-list{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  margin-top:12px;
+}
+.phase{
+  padding:9px 11px;
+  border-radius:8px;
+  background:rgba(255,255,255,.035);
+  color:var(--muted);
+  font-size:12px;
+  border-left:3px solid transparent;
+}
+.phase.active{
+  color:var(--gold2);
+  border-left-color:var(--gold);
+  background:rgba(217,166,46,.12);
+}
+.phase.done{
+  color:var(--green);
+  border-left-color:var(--green);
+}
+.phase.error{
+  color:#ff8b8b;
+  border-left-color:var(--red);
+}
+.section-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.history{
+  max-height:230px;
+  overflow:auto;
+}
+.history-row{
+  display:grid;
+  grid-template-columns:55px 1fr 85px;
+  gap:8px;
+  padding:8px 0;
+  border-bottom:1px solid var(--border);
+  font-size:11px;
+}
+.history-row small{color:var(--muted)}
+.badge{
+  display:inline-block;
+  padding:4px 7px;
+  border-radius:7px;
+  background:rgba(69,212,131,.1);
+  color:var(--green);
+  font-size:10px;
+  font-weight:bold;
+}
+.order{
+  counter-reset:item;
+}
+.order div{
+  padding:7px 0;
+  font-size:12px;
+  color:var(--muted);
+}
+.order div:before{
+  counter-increment:item;
+  content:counter(item) ". ";
+  color:var(--gold2);
+  font-weight:bold;
+}
+footer{
+  text-align:center;
+  color:var(--muted);
+  border-top:1px solid var(--border);
+  margin-top:35px;
+  padding:22px;
+  font-size:11px;
+}
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .simulator,.architecture,.section-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  main{width:94%}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .grid .card:last-child{grid-column:span 2}
+  .map-wrapper{min-height:330px}
+  canvas{height:330px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">H</div>
+    <div>
+      HeveaChain
+      <small>ROBOT AUTONOME • PLANTATIONS</small>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="eyebrow">HEVEACHAIN V0.7.2</div>
+  <h1>Le robot autonome inspiré de l’écureuil volant.</h1>
+  <p>
+    HeveaChain cartographie une plantation irrégulière, sélectionne
+    automatiquement ses cibles, navigue vers les arbres, réalise un
+    docking sécurisé puis effectue un cycle agricole complet :
+    récolte du fond de tasse, vérification, saignée simulée,
+    contrôle final et désarrimage avant le passage à l’arbre suivant.
+  </p>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <div class="stat-number" id="totalTrees">91</div>
+    <div class="stat-label">Arbres détectés</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-number" id="treatedTrees">0</div>
+    <div class="stat-label">Arbres traités</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-number" id="remainingTrees">91</div>
+    <div class="stat-label">Arbres restants</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-number" id="energy">100%</div>
+    <div class="stat-label">Énergie</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-number" id="robotDistance">2.0 m</div>
+    <div class="stat-label">Position du robot</div>
+  </div>
+</section>
+
+<h2>Simulation de plantation</h2>
+
+<section class="simulator">
+
+<div class="map-wrapper">
+<canvas id="map"></canvas>
+
+<div class="legend">
+<span><i class="dot green"></i>Traité</span>
+<span><i class="dot gold"></i>Non traité</span>
+<span><i class="dot orange"></i>Approche / docking</span>
+<span><i class="dot blue"></i>HeveaChain</span>
+<span><i class="dot red"></i>Erreur</span>
+</div>
+</div>
+
+<div class="card">
+
+<button class="primary" onclick="startMission()">DÉMARRER LA MISSION</button>
+<button onclick="pauseMission()">PAUSE</button>
+<button onclick="resetMission()">RÉINITIALISER</button>
+<button class="danger" onclick="emergencyStop()">ARRÊT D’URGENCE</button>
+
+<div class="info">
+
+<div class="info-row">
+<span>État</span>
+<strong id="status" class="status">ATTENTE</strong>
+</div>
+
+<div class="info-row">
+<span>Arbre ciblé</span>
+<strong id="target">T1</strong>
+</div>
+
+<div class="info-row">
+<span>Phase</span>
+<strong id="phase">ATTENTE</strong>
+</div>
+
+<div class="info-row">
+<span>Coordonnée X</span>
+<strong id="posX">2.00 m</strong>
+</div>
+
+<div class="info-row">
+<span>Coordonnée Y</span>
+<strong id="posY">2.00 m</strong>
+</div>
+
+<div class="info-row">
+<span>Distance tronc</span>
+<strong id="distance">1.65 m</strong>
+</div>
+
+<div class="info-row">
+<span>Pression d'arrimage</span>
+<strong id="pressure">0%</strong>
+</div>
+
+<div class="info-row">
+<span>Sécurité</span>
+<strong id="security">TRAITEMENT BLOQUÉ</strong>
+</div>
+
+<div class="info-row">
+<span>Navigation</span>
+<strong>AUTONOME</strong>
+</div>
+
+<div class="info-row">
+<span>Plantation</span>
+<strong>IRRÉGULIÈRE</strong>
+</div>
+
+</div>
+</div>
+
+</section>
+
+<h2>Architecture du système</h2>
+
+<section class="architecture">
+
+<div class="card">
+<h3>1. Cartographie dynamique</h3>
+
+<p>
+Chaque arbre possède un identifiant, une position et un état.
+La carte suit la progression réelle du robot.
+</p>
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Détectés</span>
+<strong id="mapDetected">91 / 91</strong>
+</div>
+
+<div class="mini">
+<span>Traités</span>
+<strong id="mapTreated">0</strong>
+</div>
+
+<div class="mini">
+<span>Robot X / Y</span>
+<strong id="mapPosition">2.0 / 2.0</strong>
+</div>
+
+<div class="mini">
+<span>Dernier arbre</span>
+<strong id="lastTree">—</strong>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h3>2. Navigation autonome</h3>
+
+<p>
+HeveaChain choisit automatiquement l'arbre suivant selon la
+distance, l'accessibilité et l'état de la plantation.
+</p>
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Cible</span>
+<strong id="navTarget">T1</strong>
+</div>
+
+<div class="mini">
+<span>Score</span>
+<strong id="targetScore">—</strong>
+</div>
+
+<div class="mini">
+<span>Accessibilité</span>
+<strong id="accessibility">—</strong>
+</div>
+
+<div class="mini">
+<span>Mode</span>
+<strong>AUTONOME</strong>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h3>3. Docking sécurisé</h3>
+
+<p>
+Aucune opération agricole ne commence avant le contact,
+la stabilisation, l'arrimage mécanique, le contrôle de
+pression et la vérification.
+</p>
+
+<div class="phase-list" id="dockingList">
+
+<div class="phase">APPROCHE DU TRONC</div>
+<div class="phase">CONTACT TRONC</div>
+<div class="phase">STABILISATION</div>
+<div class="phase">ARRIMAGE MÉCANIQUE</div>
+<div class="phase">CONTRÔLE DE PRESSION</div>
+<div class="phase">VÉRIFICATION</div>
+
+</div>
+</div>
+
+</section>
+
+<h2>Décision autonome</h2>
+
+<section class="section-grid">
+
+<div class="card">
+
+<h3>DÉCISION AUTONOME</h3>
+
+<p id="decisionText">
+Cible T1 sélectionnée automatiquement.
+</p>
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Score cible</span>
+<strong id="decisionScore">—</strong>
+</div>
+
+<div class="mini">
+<span>Accessibilité</span>
+<strong id="decisionAccess">—</strong>
+</div>
+
+<div class="mini">
+<span>Critère</span>
+<strong>DISTANCE + ACCESSIBILITÉ</strong>
+</div>
+
+<div class="mini">
+<span>Dernière décision</span>
+<strong id="decisionLast">T1</strong>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+
+<h3>GESTION DE L'ÉNERGIE</h3>
+
+<p>
+L'énergie influence la poursuite de la mission.
+Sous le seuil défini, le robot interrompt le cycle agricole
+et retourne vers la base.
+</p>
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Énergie restante</span>
+<strong id="energy2">100%</strong>
+</div>
+
+<div class="mini">
+<span>Seuil retour base</span>
+<strong>18%</strong>
+</div>
+
+<div class="mini">
+<span>Autonomie</span>
+<strong id="autonomy">ACTIVE</strong>
+</div>
+
+<div class="mini">
+<span>Base</span>
+<strong>2.0 / 2.0 m</strong>
+</div>
+
+</div>
+</div>
+
+</section>
+
+<h2>État de la plantation</h2>
+
+<section class="card">
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Non visités</span>
+<strong id="notVisited">91</strong>
+</div>
+
+<div class="mini">
+<span>En approche</span>
+<strong id="approachCount">0</strong>
+</div>
+
+<div class="mini">
+<span>Traités</span>
+<strong id="treatedCount">0</strong>
+</div>
+
+<div class="mini">
+<span>Inaccessibles</span>
+<strong id="inaccessible">0</strong>
+</div>
+
+<div class="mini">
+<span>Erreurs</span>
+<strong id="errors">0</strong>
+</div>
+
+<div class="mini">
+<span>Passage actuel</span>
+<strong id="currentPassage">—</strong>
+</div>
+
+</div>
+
+</section>
+
+<h2>Cycle agricole complet par arbre</h2>
+
+<section class="section-grid">
+
+<div class="card">
+
+<h3>MODULE AGRICOLE</h3>
+
+<p>
+Chaque arbre doit recevoir un cycle complet avant d'être
+déclaré traité. La récolte précède obligatoirement la
+saignée simulée.
+</p>
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Outil actuel</span>
+<strong id="tool">DÉCONNECTÉ</strong>
+</div>
+
+<div class="mini">
+<span>Opération</span>
+<strong id="operation">EN ATTENTE</strong>
+</div>
+
+<div class="mini">
+<span>Cycle</span>
+<strong id="cycle">EN ATTENTE</strong>
+</div>
+
+<div class="mini">
+<span>Arbre</span>
+<strong id="cycleTree">T1</strong>
+</div>
+
+</div>
+
+<div class="phase-list" id="agriList">
+
+<div class="phase">POSITIONNEMENT OUTIL RÉCOLTE</div>
+<div class="phase">DÉTECTION DE LA TASSE</div>
+<div class="phase">RÉCOLTE DU FOND DE TASSE</div>
+<div class="phase">VÉRIFICATION DE LA RÉCOLTE</div>
+<div class="phase">LOCALISATION DU PANNEAU</div>
+<div class="phase">POSITIONNEMENT OUTIL SAIGNÉE</div>
+<div class="phase">SAIGNÉE — SIMULATION</div>
+<div class="phase">CONTRÔLE DE LA SAIGNÉE</div>
+<div class="phase">VÉRIFICATION FINALE</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>TRAÇABILITÉ DU PASSAGE</h3>
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Arbre actuel</span>
+<strong id="traceCurrent">T1</strong>
+</div>
+
+<div class="mini">
+<span>Récolte</span>
+<strong id="traceHarvest">EN ATTENTE</strong>
+</div>
+
+<div class="mini">
+<span>Saignée</span>
+<strong id="traceTapping">EN ATTENTE</strong>
+</div>
+
+<div class="mini">
+<span>Vérification finale</span>
+<strong id="traceFinal">EN ATTENTE</strong>
+</div>
+
+<div class="mini">
+<span>Validation arbre</span>
+<strong id="traceTree">EN ATTENTE</strong>
+</div>
+
+<div class="mini">
+<span>Dernier arbre validé</span>
+<strong id="traceLast">—</strong>
+</div>
+
+</div>
+
+<p id="traceMessage">
+Aucun cycle agricole commencé.
+</p>
+
+</div>
+
+</section>
+
+<h2>Récolte du fond de tasse</h2>
+
+<section class="card">
+
+<p>
+Le robot détecte la tasse, positionne son bras, effectue la
+récupération simulée puis vérifie que la collecte est terminée
+avant de passer à la saignée.
+</p>
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Détection tasse</span>
+<strong id="cup">EN ATTENTE</strong>
+</div>
+
+<div class="mini">
+<span>Bras</span>
+<strong id="arm">REPLIÉ</strong>
+</div>
+
+<div class="mini">
+<span>Collecte</span>
+<strong id="collection">INACTIVE</strong>
+</div>
+
+<div class="mini">
+<span>Contrôle récolte</span>
+<strong id="harvestCheck">EN ATTENTE</strong>
+</div>
+
+</div>
+
+</section>
+
+<h2>Saignée — simulation</h2>
+
+<section class="card">
+
+<p>
+Après la récolte, HeveaChain localise le panneau, positionne
+l'outil et simule l'opération de saignée.
+<strong>Aucune lame ni coupe physique n'est activée.</strong>
+</p>
+
+<div class="mini-grid">
+
+<div class="mini">
+<span>Panneau</span>
+<strong id="panel">EN ATTENTE</strong>
+</div>
+
+<div class="mini">
+<span>Outil</span>
+<strong id="tappingTool">DÉCONNECTÉ</strong>
+</div>
+
+<div class="mini">
+<span>Saignée</span>
+<strong id="tapping">INACTIVE</strong>
+</div>
+
+<div class="mini">
+<span>Contrôle</span>
+<strong id="tappingCheck">EN ATTENTE</strong>
+</div>
+
+</div>
+
+</section>
+
+<h2>Historique des arbres</h2>
+
+<section class="card">
+
+<p>
+Chaque arbre validé apparaît dans l'historique après la réussite
+de son cycle complet. Un arbre n'est comptabilisé comme traité
+qu'après la vérification finale.
+</p>
+
+<div class="history" id="history">
+
+<div class="history-row">
+<strong>—</strong>
+<span>Aucun arbre encore validé</span>
+<small>EN ATTENTE</small>
+</div>
+
+</div>
+
+</section>
+
+<h2>Ordre obligatoire du passage</h2>
+
+<section class="card order">
+
+<div>ARRIMAGE SÉCURISÉ</div>
+<div>RÉCOLTE DU FOND DE TASSE</div>
+<div>VÉRIFICATION DE LA RÉCOLTE</div>
+<div>LOCALISATION DU PANNEAU</div>
+<div>POSITIONNEMENT DE L'OUTIL</div>
+<div>SAIGNÉE — SIMULATION</div>
+<div>CONTRÔLE</div>
+<div>VÉRIFICATION FINALE</div>
+<div>DÉSARRIMAGE</div>
+<div>ARBRE DÉCLARÉ TRAITÉ</div>
+
+</section>
+
+<footer>
+HeveaChain — Projet de robotique agricole autonome • V0.7.2
+</footer>
+
+</main>
+
+<script>
+
+const canvas=document.getElementById("map");
+const ctx=canvas.getContext("2d");
+
+const TOTAL=91;
+const RETURN_THRESHOLD=18;
+
+const BASE={
+  x:2,
+  y:2
+};
+
+let trees=[];
+let robot={
+  x:2,
+  y:2
+};
+
+let target=null;
+
+let state="ATTENTE";
+let phase="ATTENTE";
+
+let running=false;
+let paused=false;
+let emergency=false;
+
+let energy=100;
+
+let dockingStart=0;
+let agricultureStart=0;
+let releaseStart=0;
+let lastTime=0;
+
+let dockingIndex=-1;
+let agriIndex=-1;
+
+let dockingVerified=false;
+let mechanicalLocked=false;
+let contactReached=false;
+
+let currentPassage=0;
+
+let history=[];
+
+let lastValidated=null;
+
+const dockingSteps=[
+  "APPROCHE DU TRONC",
+  "CONTACT TRONC",
+  "STABILISATION",
+  "ARRIMAGE MÉCANIQUE",
+  "CONTRÔLE DE PRESSION",
+  "VÉRIFICATION"
+];
+
+const agriSteps=[
+  "POSITIONNEMENT OUTIL RÉCOLTE",
+  "DÉTECTION DE LA TASSE",
+  "RÉCOLTE DU FOND DE TASSE",
+  "VÉRIFICATION DE LA RÉCOLTE",
+  "LOCALISATION DU PANNEAU",
+  "POSITIONNEMENT OUTIL SAIGNÉE",
+  "SAIGNÉE — SIMULATION",
+  "CONTRÔLE DE LA SAIGNÉE",
+  "VÉRIFICATION FINALE"
+];
+
+function createPlantation(){
+
+  trees=[];
+
+  let id=1;
+
+  for(let y=5;y<=50.5;y+=7.5){
+
+    for(let x=5;x<=94;x+=7){
+
+      if(id>TOTAL)break;
+
+      trees.push({
+
+        id:"T"+id,
+
+        x:x+(Math.random()-.5)*2.2,
+
+        y:y+(Math.random()-.5)*2.0,
+
+        status:"non_visite",
+
+        accessibility:82+Math.random()*18,
+
+        passage:0,
+
+        harvest:false,
+
+        tapping:false,
+
+        final:false
+
+      });
+
+      id++;
+    }
+
+    if(id>TOTAL)break;
+  }
+}
+
+function selectTarget(){
+
+  const candidates=
+    trees.filter(
+      t=>t.status!=="traite" &&
+         t.status!=="erreur"
+    );
+
+  if(!candidates.length){
+
+    finishMission();
+
+    return;
+  }
+
+  candidates.forEach(t=>{
+
+    const d=Math.hypot(
+      t.x-robot.x,
+      t.y-robot.y
+    );
+
+    t.score=Math.max(
+      0,
+      100-d*.55+(t.accessibility*.25)
+    );
+  });
+
+  candidates.sort((a,b)=>{
+
+    const da=Math.hypot(
+      a.x-robot.x,
+      a.y-robot.y
+    );
+
+    const db=Math.hypot(
+      b.x-robot.x,
+      b.y-robot.y
+    );
+
+    return(
+      (da-db)-
+      (a.accessibility-b.accessibility)*.03
+    );
+  });
+
+  target=candidates[0];
+
+  target.status="approche";
+
+  currentPassage++;
+
+  updateDecision();
+}
+
+function startMission(){
+
+  if(emergency)return;
+
+  if(state==="TERMINÉ"){
+    resetMission();
+  }
+
+  if(!target){
+    selectTarget();
+  }
+
+  running=true;
+  paused=false;
+
+  if(state==="ATTENTE"||state==="BASE"){
+
+    state="NAVIGATION";
+
+    phase="NAVIGATION";
+  }
+
+  lastTime=performance.now();
+}
+
+function pauseMission(){
+
+  paused=!paused;
+
+  if(paused){
+
+    running=false;
+
+    phase="PAUSE";
+
+  }else{
+
+    running=true;
+
+    phase=
+      state==="NAVIGATION"?
+      "NAVIGATION":
+      phase;
+
+    lastTime=performance.now();
+  }
+}
+
+function emergencyStop(){
+
+  running=false;
+
+  emergency=true;
+
+  state="URGENCE";
+
+  phase="ARRÊT D'URGENCE";
+
+  if(target){
+    target.status="erreur";
+  }
+
+  dockingVerified=false;
+  mechanicalLocked=false;
+  contactReached=false;
+
+  updateUI();
+}
+
+function resetMission(){
+
+  createPlantation();
+
+  robot={
+    x:2,
+    y:2
+  };
+
+  target=null;
+
+  state="ATTENTE";
+
+  phase="ATTENTE";
+
+  running=false;
+  paused=false;
+  emergency=false;
+
+  energy=100;
+
+  dockingStart=0;
+  agricultureStart=0;
+  releaseStart=0;
+
+  dockingIndex=-1;
+  agriIndex=-1;
+
+  dockingVerified=false;
+  mechanicalLocked=false;
+  contactReached=false;
+
+  currentPassage=0;
+
+  history=[];
+
+  lastValidated=null;
+
+  selectTarget();
+
+  resetAgriculture();
+
+  resetDocking();
+
+  updateUI();
+
+  draw();
+}
+
+function navigate(dt,now){
+
+  if(!target){
+
+    selectTarget();
+
+    return;
+  }
+
+  const dx=target.x-robot.x;
+  const dy=target.y-robot.y;
+
+  const d=Math.hypot(dx,dy);
+
+  if(d<=1.65){
+
+    robot.x=target.x;
+    robot.y=target.y;
+
+    target.status="docking";
+
+    state="DOCKING";
+
+    phase="APPROCHE DU TRONC";
+
+    dockingStart=now;
+
+    dockingIndex=0;
+
+    updateUI();
+
+    return;
+  }
+
+  const speed=9;
+
+  const move=Math.min(
+    speed*dt,
+    d
+  );
+
+  robot.x+=dx/d*move;
+
+  robot.y+=dy/d*move;
+
+  energy=Math.max(
+    0,
+    energy-dt*.025
+  );
+
+  phase="NAVIGATION";
+
+  if(energy<=RETURN_THRESHOLD){
+
+    state="RETOUR BASE";
+
+    phase="RETOUR BASE";
+
+    if(target){
+      target.status="non_visite";
+    }
+
+    target=null;
+
+    clearNavigationDecision();
+  }
+}
+
+function docking(now){
+
+  if(!target)return;
+
+  const elapsed=
+    now-dockingStart;
+
+  if(elapsed<700){
+
+    dockingIndex=0;
+
+    phase="APPROCHE DU TRONC";
+
+  }
+  else if(elapsed<1300){
+
+    dockingIndex=1;
+
+    contactReached=true;
+
+    phase="CONTACT TRONC";
+
+  }
+  else if(elapsed<2000){
+
+    dockingIndex=2;
+
+    phase="STABILISATION";
+
+  }
+  else if(elapsed<2800){
+
+    dockingIndex=3;
+
+    mechanicalLocked=true;
+
+    phase="ARRIMAGE MÉCANIQUE";
+
+  }
+  else if(elapsed<3500){
+
+    dockingIndex=4;
+
+    phase="CONTRÔLE DE PRESSION";
+
+  }
+  else if(elapsed<4200){
+
+    dockingIndex=5;
+
+    phase="VÉRIFICATION";
+
+  }
+  else{
+
+    dockingIndex=5;
+
+    dockingVerified=
+      contactReached &&
+      mechanicalLocked;
+
+    if(!dockingVerified){
+
+      failTree("ÉCHEC DU DOCKING");
+
+      return;
+    }
+
+    state="AGRICULTURE";
+
+    phase=agriSteps[0];
+
+    agricultureStart=now;
+
+    agriIndex=0;
+
+    target.status="agriculture";
+  }
+}
+
+function agriculture(now){
+
+  if(!target)return;
+
+  const elapsed=
+    now-agricultureStart;
+
+  const STEP=1100;
+
+  agriIndex=Math.min(
+    agriSteps.length-1,
+    Math.floor(elapsed/STEP)
+  );
+
+  phase=agriSteps[agriIndex];
+
+  if(agriIndex===0){
+
+    setAgricultureVisual(
+      "OUTIL RÉCOLTE CONNECTÉ",
+      "POSITIONNEMENT",
+      "EN ATTENTE",
+      "EN ATTENTE"
+    );
+  }
+
+  if(agriIndex===1){
+
+    setAgricultureVisual(
+      "OUTIL RÉCOLTE CONNECTÉ",
+      "DÉTECTION TASSE",
+      "TASSE DÉTECTÉE",
+      "EN ATTENTE"
+    );
+  }
+
+  if(agriIndex===2){
+
+    setAgricultureVisual(
+      "OUTIL RÉCOLTE CONNECTÉ",
+      "RÉCOLTE EN COURS",
+      "TASSE DÉTECTÉE",
+      "COLLECTE EN COURS"
+    );
+  }
+
+  if(agriIndex===3){
+
+    target.harvest=true;
+
+    setAgricultureVisual(
+      "OUTIL RÉCOLTE CONNECTÉ",
+      "RÉCOLTE VALIDÉE",
+      "CYCLE TERMINÉ",
+      "COLLECTE VÉRIFIÉE"
+    );
+  }
+
+  if(agriIndex===4){
+
+    setAgricultureVisual(
+      "OUTIL SAIGNÉE CONNECTÉ",
+      "LOCALISATION PANNEAU",
+      "CYCLE TERMINÉ",
+      "COLLECTE VÉRIFIÉE"
+    );
+  }
+
+  if(agriIndex===5){
+
+    setAgricultureVisual(
+      "OUTIL SAIGNÉE CONNECTÉ",
+      "OUTIL POSITIONNÉ",
+      "CYCLE TERMINÉ",
+      "COLLECTE VÉRIFIÉE"
+    );
+  }
+
+  if(agriIndex===6){
+
+    setAgricultureVisual(
+      "OUTIL SAIGNÉE CONNECTÉ",
+      "SAIGNÉE SIMULÉE",
+      "CYCLE TERMINÉ",
+      "COLLECTE VÉRIFIÉE"
+    );
+  }
+
+  if(agriIndex===7){
+
+    setAgricultureVisual(
+      "OUTIL SAIGNÉE CONNECTÉ",
+      "CONTRÔLE SAIGNÉE",
+      "CYCLE TERMINÉ",
+      "COLLECTE VÉRIFIÉE"
+    );
+  }
+
+  if(agriIndex===8){
+
+    target.tapping=true;
+
+    setAgricultureVisual(
+      "OUTIL SAIGNÉE CONNECTÉ",
+      "VÉRIFICATION FINALE",
+      "CYCLE TERMINÉ",
+      "COLLECTE VÉRIFIÉE"
+    );
+  }
+
+  if(elapsed>=STEP*9){
+
+    if(
+      target.harvest &&
+      target.tapping &&
+      dockingVerified &&
+      mechanicalLocked &&
+      contactReached
+    ){
+
+      target.final=true;
+
+      validateTree();
+
+    }else{
+
+      failTree(
+        "ÉCHEC DE LA VÉRIFICATION FINALE"
+      );
+    }
+  }
+}
+
+function validateTree(){
+
+  if(!target)return;
+
+  target.status="traite";
+
+  target.passage=currentPassage;
+
+  lastValidated=target.id;
+
+  history.unshift({
+
+    id:target.id,
+
+    passage:currentPassage,
+
+    harvest:"VALIDÉE",
+
+    tapping:"SIMULÉE",
+
+    final:"VALIDÉE"
+  });
+
+  state="RELEASE";
+
+  phase="DÉSARRIMAGE";
+
+  releaseStart=performance.now();
+
+  target=null;
+
+  dockingVerified=false;
+  mechanicalLocked=false;
+  contactReached=false;
+
+  clearNavigationDecision();
+}
+
+function releaseRobot(now){
+
+  if(now-releaseStart<900){
+
+    phase="DÉSARRIMAGE";
+
+    return;
+  }
+
+  resetDocking();
+
+  resetAgriculture();
+
+  if(trees.every(t=>t.status==="traite")){
+
+    finishMission();
+
+    return;
+  }
+
+  if(energy<=RETURN_THRESHOLD){
+
+    state="RETOUR BASE";
+
+    phase="RETOUR BASE";
+
+    return;
+  }
+
+  selectTarget();
+
+  if(target){
+
+    state="NAVIGATION";
+
+    phase="NAVIGATION";
+  }
+}
+
+function returnBase(dt){
+
+  const dx=BASE.x-robot.x;
+
+  const dy=BASE.y-robot.y;
+
+  const d=Math.hypot(dx,dy);
+
+  if(d<=.2){
+
+    robot.x=BASE.x;
+
+    robot.y=BASE.y;
+
+    energy=Math.min(
+      100,
+      energy+35
+    );
+
+    if(energy>RETURN_THRESHOLD+10){
+
+      selectTarget();
+
+      if(target){
+
+        state="NAVIGATION";
+
+        phase="NAVIGATION";
+
+      }else{
+
+        finishMission();
+      }
+
+    }
+
+    return;
+  }
+
+  const speed=10;
+
+  const move=Math.min(
+    speed*dt,
+    d
+  );
+
+  robot.x+=dx/d*move;
+
+  robot.y+=dy/d*move;
+
+  phase="RETOUR BASE";
+}
+
+function failTree(reason){
+
+  if(target){
+
+    target.status="erreur";
+
+    history.unshift({
+
+      id:target.id,
+
+      passage:currentPassage,
+
+      harvest:
+        target.harvest?
+        "VALIDÉE":
+        "ÉCHEC",
+
+      tapping:
+        target.tapping?
+        "SIMULÉE":
+        "ÉCHEC",
+
+      final:"ÉCHEC"
+    });
+  }
+
+  state="URGENCE";
+
+  phase=reason;
+
+  running=false;
+
+  dockingVerified=false;
+  mechanicalLocked=false;
+  contactReached=false;
+
+  clearNavigationDecision();
+
+  updateUI();
+}
+
+function clearNavigationDecision(){
+
+  document.getElementById(
+    "navTarget"
+  ).textContent="—";
+
+  document.getElementById(
+    "targetScore"
+  ).textContent="—";
+
+  document.getElementById(
+    "accessibility"
+  ).textContent="—";
+
+  document.getElementById(
+    "decisionScore"
+  ).textContent="—";
+
+  document.getElementById(
+    "decisionAccess"
+  ).textContent="—";
+}
+
+function finishMission(){
+
+  running=false;
+
+  state="TERMINÉ";
+
+  phase="MISSION TERMINÉE";
+
+  target=null;
+
+  dockingVerified=false;
+  mechanicalLocked=false;
+  contactReached=false;
+
+  resetAgriculture();
+
+  resetDocking();
+
+  clearNavigationDecision();
+
+  document.getElementById(
+    "decisionText"
+  ).textContent=
+    "MISSION TERMINÉE — AUCUNE CIBLE ACTIVE";
+
+  document.getElementById(
+    "decisionLast"
+  ).textContent=
+    lastValidated||"—";
+
+  document.getElementById(
+    "autonomy"
+  ).textContent=
+    "MISSION TERMINÉE";
+}
+
+function resetDocking(){
+
+  dockingIndex=-1;
+}
+
+function resetAgriculture(){
+
+  agriIndex=-1;
+
+  document.getElementById(
+    "tool"
+  ).textContent="DÉCONNECTÉ";
+
+  document.getElementById(
+    "operation"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "cycle"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "cup"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "arm"
+  ).textContent="REPLIÉ";
+
+  document.getElementById(
+    "collection"
+  ).textContent="INACTIVE";
+
+  document.getElementById(
+    "harvestCheck"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "panel"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "tappingTool"
+  ).textContent="DÉCONNECTÉ";
+
+  document.getElementById(
+    "tapping"
+  ).textContent="INACTIVE";
+
+  document.getElementById(
+    "tappingCheck"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "traceHarvest"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "traceTapping"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "traceFinal"
+  ).textContent="EN ATTENTE";
+
+  document.getElementById(
+    "traceTree"
+  ).textContent="EN ATTENTE";
+}
+
+function setAgricultureVisual(
+  tool,
+  operation,
+  cup,
+  collection
+){
+
+  document.getElementById(
+    "tool"
+  ).textContent=tool;
+
+  document.getElementById(
+    "operation"
+  ).textContent=operation;
+
+  document.getElementById(
+    "cup"
+  ).textContent=cup;
+
+  document.getElementById(
+    "collection"
+  ).textContent=collection;
+
+  if(agriIndex>=1){
+
+    document.getElementById(
+      "arm"
+    ).textContent="BRAS POSITIONNÉ";
+  }
+
+  if(agriIndex>=3){
+
+    document.getElementById(
+      "harvestCheck"
+    ).textContent="RÉCOLTE VALIDÉE";
+  }
+
+  if(agriIndex>=4){
+
+    document.getElementById(
+      "panel"
+    ).textContent="PANNEAU DÉTECTÉ";
+  }
+
+  if(agriIndex>=5){
+
+    document.getElementById(
+      "tappingTool"
+    ).textContent="OUTIL POSITIONNÉ";
+  }
+
+  if(agriIndex>=6){
+
+    document.getElementById(
+      "tapping"
+    ).textContent="SIMULATION EN COURS";
+  }
+
+  if(agriIndex>=8){
+
+    document.getElementById(
+      "tapping"
+    ).textContent=
+      "SIMULATION TERMINÉE";
+
+    document.getElementById(
+      "tappingCheck"
+    ).textContent=
+      "CONTRÔLE VALIDÉ";
+  }
+
+  if(target){
+
+    document.getElementById(
+      "cycleTree"
+    ).textContent=target.id;
+
+    document.getElementById(
+      "traceCurrent"
+    ).textContent=target.id;
+
+    document.getElementById(
+      "traceHarvest"
+    ).textContent=
+      agriIndex>=3?
+      "VALIDÉE":
+      "EN COURS";
+
+    document.getElementById(
+      "traceTapping"
+    ).textContent=
+      agriIndex>=8?
+      "SIMULÉE":
+      "EN ATTENTE";
+
+    document.getElementById(
+      "traceFinal"
+    ).textContent=
+      agriIndex>=8?
+      "VALIDÉE":
+      "EN ATTENTE";
+
+    document.getElementById(
+      "traceMessage"
+    ).textContent=
+      "Cycle en cours sur "+
+      target.id+
+      " : récolte puis saignée simulée obligatoirement.";
+  }
+}
+
+function updateDecision(){
+
+  if(!target){
+
+    clearNavigationDecision();
+
+    return;
+  }
+
+  const d=Math.hypot(
+    target.x-robot.x,
+    target.y-robot.y
+  );
+
+  const score=Math.max(
+    0,
+    Math.min(
+      100,
+      100-d*.55+
+      (target.accessibility*.25)
+    )
+  );
+
+  document.getElementById(
+    "targetScore"
+  ).textContent=
+    score.toFixed(1);
+
+  document.getElementById(
+    "accessibility"
+  ).textContent=
+    Math.round(
+      target.accessibility
+    )+"%";
+
+  document.getElementById(
+    "decisionScore"
+  ).textContent=
+    score.toFixed(1);
+
+  document.getElementById(
+    "decisionAccess"
+  ).textContent=
+    Math.round(
+      target.accessibility
+    )+"%";
+
+  document.getElementById(
+    "decisionText"
+  ).textContent=
+    "Nouvelle cible sélectionnée automatiquement : "+
+    target.id;
+
+  document.getElementById(
+    "decisionLast"
+  ).textContent=
+    target.id;
+}
+
+function updateUI(){
+
+  const treated=
+    trees.filter(
+      t=>t.status==="traite"
+    ).length;
+
+  const remaining=
+    trees.filter(
+      t=>t.status!=="traite"
+    ).length;
+
+  const approach=
+    trees.filter(
+      t=>
+        t.status==="approche"||
+        t.status==="docking"||
+        t.status==="agriculture"
+    ).length;
+
+  const errors=
+    trees.filter(
+      t=>t.status==="erreur"
+    ).length;
+
+  document.getElementById(
+    "totalTrees"
+  ).textContent=
+    trees.length;
+
+  document.getElementById(
+    "treatedTrees"
+  ).textContent=
+    treated;
+
+  document.getElementById(
+    "remainingTrees"
+  ).textContent=
+    remaining;
+
+  document.getElementById(
+    "energy"
+  ).textContent=
+    Math.round(energy)+"%";
+
+  document.getElementById(
+    "robotDistance"
+  ).textContent=
+    robot.x.toFixed(1)+" m";
+
+  document.getElementById(
+    "status"
+  ).textContent=
+    state;
+
+  document.getElementById(
+    "target"
+  ).textContent=
+    target?
+    target.id:
+    "—";
+
+  document.getElementById(
+    "phase"
+  ).textContent=
+    phase;
+
+  document.getElementById(
+    "posX"
+  ).textContent=
+    robot.x.toFixed(2)+" m";
+
+  document.getElementById(
+    "posY"
+  ).textContent=
+    robot.y.toFixed(2)+" m";
+
+  if(target){
+
+    const d=Math.hypot(
+      target.x-robot.x,
+      target.y-robot.y
+    );
+
+    document.getElementById(
+      "distance"
+    ).textContent=
+      state==="DOCKING"||
+      state==="AGRICULTURE"?
+      "0.00 m":
+      d.toFixed(2)+" m";
+
+  }else{
+
+    document.getElementById(
+      "distance"
+    ).textContent="—";
+  }
+
+  let pressure=0;
+
+  if(
+    state==="DOCKING"||
+    state==="AGRICULTURE"
+  ){
+
+    pressure=
+      dockingIndex>=3?
+      100:
+      0;
+  }
+
+  document.getElementById(
+    "pressure"
+  ).textContent=
+    pressure+"%";
+
+  document.getElementById(
+    "security"
+  ).textContent=
+    state==="AGRICULTURE" &&
+    dockingVerified?
+    "TRAITEMENT AUTORISÉ":
+    "TRAITEMENT NON ACTIF";
+
+  document.getElementById(
+    "mapDetected"
+  ).textContent=
+    trees.length+
+    " / "+
+    trees.length;
+
+  document.getElementById(
+    "mapTreated"
+  ).textContent=
+    treated;
+
+  document.getElementById(
+    "mapPosition"
+  ).textContent=
+    robot.x.toFixed(1)+
+    " / "+
+    robot.y.toFixed(1);
+
+  document.getElementById(
+    "lastTree"
+  ).textContent=
+    lastValidated||"—";
+
+  if(target){
+
+    document.getElementById(
+      "navTarget"
+    ).textContent=
+      target.id;
+
+  }else{
+
+    clearNavigationDecision();
+  }
+
+  document.getElementById(
+    "notVisited"
+  ).textContent=
+    trees.filter(
+      t=>t.status==="non_visite"
+    ).length;
+
+  document.getElementById(
+    "approachCount"
+  ).textContent=
+    approach;
+
+  document.getElementById(
+    "treatedCount"
+  ).textContent=
+    treated;
+
+  document.getElementById(
+    "inaccessible"
+  ).textContent=
+    0;
+
+  document.getElementById(
+    "errors"
+  ).textContent=
+    errors;
+
+  document.getElementById(
+    "currentPassage"
+  ).textContent=
+    target?
+    "PASSAGE "+
+    currentPassage+
+    " — "+
+    target.id:
+    lastValidated?
+    "DERNIER VALIDÉ : "+
+    lastValidated:
+    "—";
+
+  document.getElementById(
+    "energy2"
+  ).textContent=
+    Math.round(energy)+"%";
+
+  if(state==="TERMINÉ"){
+
+    document.getElementById(
+      "autonomy"
+    ).textContent=
+      "MISSION TERMINÉE";
+
+  }else if(state==="URGENCE"){
+
+    document.getElementById(
+      "autonomy"
+    ).textContent=
+      "ARRÊT D'URGENCE";
+
+  }else{
+
+    document.getElementById(
+      "autonomy"
+    ).textContent=
+      running?
+      "ACTIVE":
+      "EN ATTENTE";
+  }
+
+  if(target){
+
+    document.getElementById(
+      "cycleTree"
+    ).textContent=
+      target.id;
+
+  }else{
+
+    document.getElementById(
+      "cycleTree"
+    ).textContent=
+      "—";
+
+    document.getElementById(
+      "traceCurrent"
+    ).textContent=
+      "—";
+  }
+
+  document.getElementById(
+    "traceLast"
+  ).textContent=
+    lastValidated||"—";
+
+  if(state==="TERMINÉ"){
+
+    document.getElementById(
+      "cycle"
+    ).textContent=
+      "TOUS LES ARBRES TRAITÉS";
+
+    document.getElementById(
+      "operation"
+    ).textContent=
+      "MISSION TERMINÉE";
+
+    document.getElementById(
+      "traceMessage"
+    ).textContent=
+      "MISSION TERMINÉE — TOUS LES CYCLES AGRICOLES VALIDÉS";
+  }
+
+  updateDockingList();
+
+  updateAgriList();
+
+  updateHistory();
+}
+
+function updateDockingList(){
+
+  const list=
+    document.querySelectorAll(
+      "#dockingList .phase"
+    );
+
+  list.forEach((el,i)=>{
+
+    el.className="phase";
+
+    if(state==="TERMINÉ"){
+
+      el.classList.add("done");
+
+    }else if(state==="DOCKING"){
+
+      if(i<dockingIndex)
+        el.classList.add("done");
+
+      if(i===dockingIndex)
+        el.classList.add("active");
+
+    }else if(
+      state==="AGRICULTURE"||
+      state==="RELEASE"
+    ){
+
+      el.classList.add("done");
+    }
+  });
+
+  if(state==="TERMINÉ"){
+
+    list[list.length-1].textContent=
+      "MISSION TERMINÉE — AUCUN ARBRE ARRIMÉ";
+  }
+}
+
+function updateAgriList(){
+
+  const list=
+    document.querySelectorAll(
+      "#agriList .phase"
+    );
+
+  list.forEach((el,i)=>{
+
+    el.className="phase";
+
+    if(state==="TERMINÉ"){
+
+      el.classList.add("done");
+
+    }else if(state==="AGRICULTURE"){
+
+      if(i<agriIndex)
+        el.classList.add("done");
+
+      if(i===agriIndex)
+        el.classList.add("active");
+
+    }else if(state==="RELEASE"){
+
+      el.classList.add("done");
+    }
+  });
+
+  if(state==="TERMINÉ"){
+
+    list[list.length-1].textContent=
+      "MISSION TERMINÉE — CYCLES AGRICOLES VALIDÉS";
+  }
+}
+
+function updateHistory(){
+
+  const box=
+    document.getElementById(
+      "history"
+    );
+
+  if(!history.length){
+
+    box.innerHTML=
+      '<div class="history-row">'+
+      '<strong>—</strong>'+
+      '<span>Aucun arbre encore validé</span>'+
+      '<small>EN ATTENTE</small>'+
+      '</div>';
+
+    return;
+  }
+
+  box.innerHTML=
+    history.map(h=>`
+
+      <div class="history-row">
+
+        <strong>${h.id}</strong>
+
+        <span>
+
+          Passage ${h.passage}<br>
+
+          <small>
+            Récolte : ${h.harvest} •
+            Saignée : ${h.tapping}
+          </small>
+
+        </span>
+
+        <span class="badge">
+          ${h.final}
+        </span>
+
+      </div>
+
+    `).join("");
+}
+
+function draw(){
+
+  const rect=
+    canvas.getBoundingClientRect();
+
+  if(
+    canvas.width!==
+      Math.floor(
+        rect.width*
+        devicePixelRatio
+      )||
+    canvas.height!==
+      Math.floor(
+        rect.height*
+        devicePixelRatio
+      )
+  ){
+
+    canvas.width=
+      Math.floor(
+        rect.width*
+        devicePixelRatio
+      );
+
+    canvas.height=
+      Math.floor(
+        rect.height*
+        devicePixelRatio
+      );
+  }
+
+  ctx.setTransform(
+    devicePixelRatio,
+    0,
+    0,
+    devicePixelRatio,
+    0,
+    0
+  );
+
+  const w=rect.width;
+  const h=rect.height;
+
+  ctx.clearRect(
+    0,
+    0,
+    w,
+    h
+  );
+
+  ctx.fillStyle="#030a10";
+
+  ctx.fillRect(
+    0,
+    0,
+    w,
+    h
+  );
+
+  const scale=
+    Math.min(
+      w/105,
+      h/62
+    );
+
+  function sx(x){
+    return x*scale;
+  }
+
+  function sy(y){
+    return y*scale;
+  }
+
+  ctx.strokeStyle=
+    "rgba(255,255,255,.035)";
+
+  ctx.lineWidth=1;
+
+  for(let x=0;x<105;x+=5){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      sx(x),
+      0
+    );
+
+    ctx.lineTo(
+      sx(x),
+      h
+    );
+
+    ctx.stroke();
+  }
+
+  for(let y=0;y<62;y+=5){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      0,
+      sy(y)
+    );
+
+    ctx.lineTo(
+      w,
+      sy(y)
+    );
+
+    ctx.stroke();
+  }
+
+  if(target){
+
+    ctx.beginPath();
+
+    ctx.arc(
+      sx(target.x),
+      sy(target.y),
+      14,
+      0,
+      Math.PI*2
+    );
+
+    ctx.strokeStyle=
+      "rgba(217,166,46,.28)";
+
+    ctx.lineWidth=2;
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      sx(robot.x),
+      sy(robot.y)
+    );
+
+    ctx.lineTo(
+      sx(target.x),
+      sy(target.y)
+    );
+
+    ctx.strokeStyle=
+      "rgba(84,169,255,.38)";
+
+    ctx.lineWidth=1.5;
+
+    ctx.stroke();
+  }
+
+  trees.forEach(t=>{
+
+    let fill="#d9a62e";
+
+    if(t.status==="traite")
+      fill="#45d483";
+
+    if(
+      t.status==="approche"||
+      t.status==="docking"||
+      t.status==="agriculture"
+    )
+      fill="#ff9e3d";
+
+    if(t.status==="erreur")
+      fill="#ff5c5c";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      sx(t.x),
+      sy(t.y),
+      3.2,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fillStyle=fill;
+
+    ctx.fill();
+
+    if(
+      target &&
+      t.id===target.id
+    ){
+
+      ctx.beginPath();
+
+      ctx.arc(
+        sx(t.x),
+        sy(t.y),
+        7,
+        0,
+        Math.PI*2
+      );
+
+      ctx.strokeStyle="#ffd76a";
+
+      ctx.lineWidth=1.5;
+
+      ctx.stroke();
+    }
+  });
+
+  ctx.beginPath();
+
+  ctx.arc(
+    sx(BASE.x),
+    sy(BASE.y),
+    6,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle="#ffd76a";
+
+  ctx.fill();
+
+  ctx.fillStyle="#8da0af";
+
+  ctx.font="10px Arial";
+
+  ctx.fillText(
+    "BASE",
+    sx(BASE.x)+8,
+    sy(BASE.y)+3
+  );
+
+  ctx.beginPath();
+
+  ctx.arc(
+    sx(robot.x),
+    sy(robot.y),
+    7,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle="#54a9ff";
+
+  ctx.fill();
+
+  ctx.beginPath();
+
+  ctx.arc(
+    sx(robot.x),
+    sy(robot.y),
+    10,
+    0,
+    Math.PI*2
+  );
+
+  ctx.strokeStyle=
+    "rgba(84,169,255,.45)";
+
+  ctx.lineWidth=2;
+
+  ctx.stroke();
+
+  if(
+    state==="DOCKING"||
+    state==="AGRICULTURE"
+  ){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      sx(robot.x)+5,
+      sy(robot.y)+2
+    );
+
+    ctx.lineTo(
+      sx(robot.x)+17,
+      sy(robot.y)+7
+    );
+
+    ctx.strokeStyle="#ffd76a";
+
+    ctx.lineWidth=3;
+
+    ctx.stroke();
+  }
+
+  ctx.fillStyle="#eef5f8";
+
+  ctx.font="bold 10px Arial";
+
+  ctx.fillText(
+    "HEVEACHAIN",
+    sx(robot.x)+12,
+    sy(robot.y)-9
+  );
+}
+
+function loop(now){
+
+  if(!lastTime)
+    lastTime=now;
+
+  const dt=Math.min(
+    (now-lastTime)/1000,
+    .05
+  );
+
+  lastTime=now;
+
+  if(
+    running &&
+    !paused &&
+    !emergency
+  ){
+
+    if(state==="NAVIGATION"){
+
+      navigate(
+        dt,
+        now
+      );
+
+    }else if(state==="DOCKING"){
+
+      docking(now);
+
+    }else if(state==="AGRICULTURE"){
+
+      agriculture(now);
+
+    }else if(state==="RELEASE"){
+
+      releaseRobot(now);
+
+    }else if(state==="RETOUR BASE"){
+
+      returnBase(dt);
+    }
+
+    updateUI();
+  }
+
+  draw();
+
+  requestAnimationFrame(loop);
+}
+
+createPlantation();
+
+selectTarget();
+
+resetAgriculture();
+
+resetDocking();
+
+updateUI();
+
+draw();
+
+requestAnimationFrame(loop);
+
+</script>
+
+</body>
+</html>
