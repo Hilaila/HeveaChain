@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeveaChain — Robot Agricole Autonome V0.5</title>
+
+<style>
+:root{
+  --bg:#02070d;
+  --panel:#07111b;
+  --panel2:#0a1622;
+  --gold:#d9a62e;
+  --gold2:#ffd76a;
+  --green:#39d98a;
+  --orange:#ff9f43;
+  --red:#ff5c5c;
+  --blue:#49a7ff;
+  --cyan:#55e6e6;
+  --text:#eef4f8;
+  --muted:#8fa2b3;
+  --line:rgba(255,255,255,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at top,#10202d 0,#02070d 42%,#010408 100%);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+header{
+  border-bottom:1px solid var(--line);
+  background:rgba(2,7,13,.88);
+  backdrop-filter:blur(10px);
+  padding:15px 4%;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:19px;
+  font-weight:bold;
+}
+
+.brand small{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:1.4px;
+}
+
+.logo{
+  width:42px;
+  height:42px;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold2);
+  font-weight:bold;
+  box-shadow:0 0 18px rgba(217,166,46,.25);
+}
+
+main{
+  width:min(1250px,92%);
+  margin:auto;
+  padding:35px 0 20px;
+}
+
+.eyebrow{
+  color:var(--gold2);
+  letter-spacing:2px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+h1{
+  font-size:clamp(30px,5vw,52px);
+  margin:10px 0;
+  line-height:1.05;
+}
+
+h2{
+  margin-top:32px;
+  font-size:22px;
+}
+
+.hero p{
+  max-width:950px;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:15px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
+  margin-top:25px;
+}
+
+.card{
+  background:linear-gradient(145deg,rgba(10,22,34,.96),rgba(5,12,20,.96));
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:17px;
+  box-shadow:0 12px 30px rgba(0,0,0,.22);
+}
+
+.stat-number{
+  font-size:28px;
+  font-weight:bold;
+  color:var(--gold2);
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.simulator{
+  display:grid;
+  grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);
+  gap:15px;
+}
+
+.map-wrapper{
+  position:relative;
+  min-height:500px;
+  background:#02070b;
+  border:1px solid var(--line);
+  border-radius:15px;
+  overflow:hidden;
+}
+
+canvas{
+  width:100%;
+  height:500px;
+  display:block;
+}
+
+.legend{
+  position:absolute;
+  left:12px;
+  bottom:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  background:rgba(0,0,0,.62);
+  padding:9px;
+  border-radius:9px;
+  font-size:11px;
+}
+
+.dot{
+  display:inline-block;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  margin-right:4px;
+}
+
+.green{background:var(--green)}
+.gold{background:var(--gold)}
+.orange{background:var(--orange)}
+.blue{background:var(--blue)}
+.cyan{background:var(--cyan)}
+
+.control-card{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+button{
+  border:1px solid var(--gold);
+  border-radius:10px;
+  padding:12px;
+  background:rgba(217,166,46,.08);
+  color:var(--gold2);
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:rgba(217,166,46,.18);
+}
+
+button.primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#111;
+}
+
+button.active{
+  background:var(--gold);
+  color:#111;
+}
+
+.mode-title{
+  color:var(--gold2);
+  font-size:12px;
+  letter-spacing:1px;
+  margin-top:5px;
+}
+
+.mode-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.info{
+  border-top:1px solid var(--line);
+  padding-top:8px;
+  margin-top:5px;
+}
+
+.info-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:7px 0;
+  font-size:12px;
+}
+
+.info-row span{
+  color:var(--muted);
+}
+
+.status{
+  color:var(--green);
+}
+
+.agri-status{
+  border:1px solid rgba(217,166,46,.25);
+  background:rgba(217,166,46,.06);
+  border-radius:11px;
+  padding:12px;
+  margin-top:4px;
+}
+
+.agri-status strong{
+  display:block;
+  color:var(--gold2);
+  margin-bottom:5px;
+}
+
+.agri-status span{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.architecture{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.architecture h3{
+  color:var(--gold2);
+  margin-top:0;
+}
+
+.architecture p{
+  color:var(--muted);
+  line-height:1.6;
+  font-size:13px;
+}
+
+.step-list{
+  list-style:none;
+  padding:0;
+  margin:10px 0 0;
+}
+
+.step-list li{
+  padding:7px 9px;
+  margin:5px 0;
+  border-left:3px solid rgba(255,255,255,.12);
+  color:var(--muted);
+  font-size:12px;
+}
+
+.step-list li.done{
+  border-left-color:var(--green);
+  color:var(--green);
+}
+
+.step-list li.current{
+  border-left-color:var(--gold2);
+  color:var(--gold2);
+  background:rgba(217,166,46,.07);
+}
+
+.authorization{
+  margin-top:10px;
+  padding:10px;
+  border-radius:9px;
+  text-align:center;
+  font-weight:bold;
+  font-size:11px;
+  background:rgba(255,92,92,.08);
+  border:1px solid rgba(255,92,92,.25);
+  color:var(--red);
+}
+
+.authorization.allowed{
+  color:var(--green);
+  border-color:rgba(57,217,138,.3);
+  background:rgba(57,217,138,.06);
+}
+
+.authorization.finished{
+  color:var(--muted);
+  border-color:var(--line);
+  background:rgba(255,255,255,.03);
+}
+
+footer{
+  text-align:center;
+  color:var(--muted);
+  padding:25px;
+  border-top:1px solid var(--line);
+  font-size:11px;
+  margin-top:35px;
+}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .simulator,.architecture{grid-template-columns:1fr}
+}
+
+@media(max-width:520px){
+  main{width:94%}
+  .grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .card{padding:13px}
+  .stat-number{font-size:22px}
+  .mode-buttons{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">H</div>
+    <div>
+      HeveaChain
+      <small>ROBOT AUTONOME • PLANTATIONS</small>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="eyebrow">HEVEACHAIN V0.5</div>
+  <h1>Le robot autonome inspiré de l’écureuil volant.</h1>
+
+  <p>
+    HeveaChain cartographie une plantation irrégulière, détecte les arbres,
+    sélectionne automatiquement une cible, navigue vers celle-ci puis réalise
+    un docking mécanique sécurisé avant toute opération agricole.
+    V0.5 introduit une architecture agricole à double fonction :
+    récolte du fond de tasse et simulation de saignée.
+  </p>
+</section>
+
+<section class="grid">
+  <div class="card">
+    <div class="stat-number" id="totalTrees">0</div>
+    <div class="stat-label">Arbres détectés</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-number" id="treatedTrees">0</div>
+    <div class="stat-label">Arbres traités</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-number" id="remainingTrees">0</div>
+    <div class="stat-label">Arbres restants</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-number" id="robotDistance">0.0 m</div>
+    <div class="stat-label">Position du robot</div>
+  </div>
+</section>
+
+<h2>Simulation de plantation</h2>
+
+<section class="simulator">
+
+<div class="map-wrapper">
+  <canvas id="map"></canvas>
+
+  <div class="legend">
+    <span><i class="dot green"></i>Traité</span>
+    <span><i class="dot gold"></i>Non traité</span>
+    <span><i class="dot orange"></i>En cours</span>
+    <span><i class="dot blue"></i>HeveaChain</span>
+    <span><i class="dot cyan"></i>Zone agricole</span>
+  </div>
+</div>
+
+<div class="card control-card">
+
+  <button class="primary" onclick="startSimulation()">
+    Démarrer la simulation
+  </button>
+
+  <button onclick="pauseSimulation()">
+    Pause
+  </button>
+
+  <button onclick="resetSimulation()">
+    Réinitialiser
+  </button>
+
+  <div class="mode-title">MODE AGRICOLE</div>
+
+  <div class="mode-buttons">
+    <button id="harvestBtn" class="active" onclick="setAgriculturalMode('RECOLTE')">
+      RÉCOLTE
+    </button>
+
+    <button id="tappingBtn" onclick="setAgriculturalMode('SAIGNEE')">
+      SAIGNÉE
+    </button>
+  </div>
+
+  <div class="agri-status">
+    <strong id="agriMode">RÉCOLTE DU FOND DE TASSE</strong>
+    <span id="agriDetail">
+      Mode agricole sélectionné. L'opération sera autorisée uniquement
+      après docking sécurisé.
+    </span>
+  </div>
+
+  <div class="info">
+
+    <div class="info-row">
+      <span>État</span>
+      <strong class="status" id="status">PRÊT</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Arbre ciblé</span>
+      <strong id="target">—</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Phase</span>
+      <strong id="phase">ATTENTE</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Coordonnée X</span>
+      <strong id="posX">2.00 m</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Coordonnée Y</span>
+      <strong id="posY">2.00 m</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Distance tronc</span>
+      <strong id="distance">—</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Pression d'arrimage</span>
+      <strong id="pressure">0 %</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Sécurité</span>
+      <strong id="security">TRAITEMENT NON ACTIF</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Outil agricole</span>
+      <strong id="toolState">DÉCONNECTÉ</strong>
+    </div>
+
+    <div class="info-row">
+      <span>Opération</span>
+      <strong id="operation">AUCUNE</strong>
+    </div>
+
+  </div>
+
+</div>
+
+</section>
+
+<h2>Architecture du système</h2>
+
+<section class="architecture">
+
+<div class="card">
+  <h3>Cartographie dynamique</h3>
+
+  <p>
+    Chaque arbre reçoit un identifiant et une position. La carte représente
+    une plantation irrégulière sans supposer une géométrie parfaitement régulière.
+  </p>
+
+  <div class="info-row">
+    <span>Détectés</span>
+    <strong id="mapDetected">0 / 0</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Traités</span>
+    <strong id="mapTreated">0</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Robot</span>
+    <strong id="mapRobot">0.0 / 0.0</strong>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Navigation autonome</h3>
+
+  <p>
+    HeveaChain sélectionne automatiquement la prochaine cible et calcule
+    son déplacement à partir de la position réelle des arbres.
+  </p>
+
+  <div class="info-row">
+    <span>Cible</span>
+    <strong id="navTarget">—</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Mode</span>
+    <strong>AUTONOME</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Plantation</span>
+    <strong>IRRÉGULIÈRE</strong>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Docking mécanique sécurisé</h3>
+
+  <ul class="step-list" id="dockingSteps">
+    <li>APPROCHE DU TRONC</li>
+    <li>CONTACT TRONC</li>
+    <li>STABILISATION</li>
+    <li>ARRIMAGE MÉCANIQUE</li>
+    <li>CONTRÔLE DE PRESSION</li>
+    <li>VÉRIFICATION</li>
+  </ul>
+
+  <div class="authorization" id="authorization">
+    TRAITEMENT BLOQUÉ
+  </div>
+</div>
+
+<div class="card">
+  <h3>Module agricole double fonction</h3>
+
+  <ul class="step-list" id="agriSteps">
+    <li>POSITIONNEMENT OUTIL</li>
+    <li>DÉTECTION DE LA ZONE</li>
+    <li>VÉRIFICATION</li>
+    <li>OPÉRATION AGRICOLE</li>
+    <li>CONTRÔLE</li>
+    <li>FIN D'OPÉRATION</li>
+  </ul>
+
+  <div class="authorization finished" id="agriAuthorization">
+    OUTIL EN ATTENTE
+  </div>
+</div>
+
+<div class="card">
+  <h3>Récolte du fond de tasse</h3>
+
+  <p>
+    Le mode récolte simule le positionnement d'un bras agricole,
+    la détection de la tasse et la récupération du produit.
+  </p>
+
+  <div class="info-row">
+    <span>Détection</span>
+    <strong id="cupDetection">EN ATTENTE</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Bras</span>
+    <strong id="armState">REPLIÉ</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Collecte</span>
+    <strong id="collectionState">INACTIVE</strong>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Saignée — simulation</h3>
+
+  <p>
+    Le mode saignée représente la logique de positionnement et de contrôle
+    de l'outil sans action de coupe physique.
+  </p>
+
+  <div class="info-row">
+    <span>Panneau</span>
+    <strong id="panelDetection">EN ATTENTE</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Outil</span>
+    <strong id="tappingTool">DÉCONNECTÉ</strong>
+  </div>
+
+  <div class="info-row">
+    <span>Simulation</span>
+    <strong id="tappingSimulation">INACTIVE</strong>
+  </div>
+</div>
+
+</section>
+
+</main>
+
+<footer>
+  HeveaChain — Projet de robotique agricole autonome • V0.5
+  • Double fonction agricole • Simulation sécurisée
+</footer>
+
+<script>
+
+const canvas = document.getElementById("map");
+const ctx = canvas.getContext("2d");
+
+let trees = [];
+let robot = {
+  x:2,
+  y:2
+};
+
+let target = null;
+
+let running = false;
+let paused = false;
+
+let state = "ATTENTE";
+let phase = "ATTENTE";
+
+let agriculturalMode = "RECOLTE";
+
+let dockingData = {
+  distance:1.65,
+  pressure:0
+};
+
+let contactReached = false;
+let mechanicalLocked = false;
+let dockingVerified = false;
+
+let agriculturalOperation = false;
+let operationDone = false;
+
+let dockingStart = 0;
+let operationStart = 0;
+
+let lastTime = 0;
+
+const WORLD_W = 100;
+const WORLD_H = 58;
+
+
+/* =========================================================
+   GÉNÉRATION DE LA PLANTATION
+   ========================================================= */
+
+function generatePlantation(){
+
+  trees = [];
+
+  let id = 1;
+
+  for(let y=5; y<=51; y+=7.5){
+
+    for(let x=5; x<=94; x+=7){
+
+      const jitterX = (Math.random()-0.5)*2.4;
+      const jitterY = (Math.random()-0.5)*2.2;
+
+      trees.push({
+        id:id++,
+        x:Math.max(2,Math.min(98,x+jitterX)),
+        y:Math.max(2,Math.min(56,y+jitterY)),
+        treated:false,
+        active:false
+      });
+    }
+  }
+
+  /*
+    Pour conserver une simulation proche de V0.4.1,
+    on limite la plantation à 91 arbres.
+  */
+
+  trees = trees.slice(0,91);
+}
+
+
+/* =========================================================
+   UTILITAIRES
+   ========================================================= */
+
+function distanceBetween(a,b){
+
+  return Math.hypot(
+    a.x-b.x,
+    a.y-b.y
+  );
+}
+
+
+function selectNextTarget(){
+
+  const candidates = trees.filter(t => !t.treated);
+
+  if(!candidates.length){
+    finishMission();
+    return null;
+  }
+
+  let best = null;
+  let bestDistance = Infinity;
+
+  for(const tree of candidates){
+
+    const d = distanceBetween(robot,tree);
+
+    if(d < bestDistance){
+
+      bestDistance = d;
+      best = tree;
+    }
+  }
+
+  if(best){
+    best.active = true;
+  }
+
+  return best;
+}
+
+
+/* =========================================================
+   MODE AGRICOLE
+   ========================================================= */
+
+function setAgriculturalMode(mode){
+
+  if(running){
+    return;
+  }
+
+  agriculturalMode = mode;
+
+  document
+    .getElementById("harvestBtn")
+    .classList.toggle("active",mode==="RECOLTE");
+
+  document
+    .getElementById("tappingBtn")
+    .classList.toggle("active",mode==="SAIGNEE");
+
+  if(mode==="RECOLTE"){
+
+    document.getElementById("agriMode").textContent =
+      "RÉCOLTE DU FOND DE TASSE";
+
+    document.getElementById("agriDetail").textContent =
+      "Le bras de collecte sera positionné après docking sécurisé.";
+
+  }else{
+
+    document.getElementById("agriMode").textContent =
+      "SAIGNÉE — SIMULATION";
+
+    document.getElementById("agriDetail").textContent =
+      "Simulation du positionnement et du contrôle de l'outil. Aucune coupe physique.";
+  }
+}
+
+
+/* =========================================================
+   DÉMARRAGE
+   ========================================================= */
+
+function startSimulation(){
+
+  if(running){
+    return;
+  }
+
+  if(trees.every(t=>t.treated)){
+    resetSimulation();
+  }
+
+  running = true;
+  paused = false;
+
+  state = "NAVIGATION";
+  phase = "NAVIGATION";
+
+  target = selectNextTarget();
+
+  lastTime = performance.now();
+
+  requestAnimationFrame(loop);
+
+  updateUI();
+}
+
+
+function pauseSimulation(){
+
+  paused = !paused;
+
+  if(paused){
+    running = false;
+    document.getElementById("status").textContent = "PAUSE";
+  }else{
+    startSimulation();
+  }
+}
+
+
+/* =========================================================
+   RÉINITIALISATION
+   ========================================================= */
+
+function resetSimulation(){
+
+  running = false;
+  paused = false;
+
+  generatePlantation();
+
+  robot.x = 2;
+  robot.y = 2;
+
+  target = null;
+
+  state = "ATTENTE";
+  phase = "ATTENTE";
+
+  contactReached = false;
+  mechanicalLocked = false;
+  dockingVerified = false;
+
+  agriculturalOperation = false;
+  operationDone = false;
+
+  dockingData.distance = 1.65;
+  dockingData.pressure = 0;
+
+  resetDockingVisual();
+  resetAgriculturalVisual();
+
+  document.getElementById("status").textContent = "PRÊT";
+
+  updateUI();
+  draw();
+}
+
+
+/* =========================================================
+   BOUCLE PRINCIPALE
+   ========================================================= */
+
+function loop(timestamp){
+
+  if(!running){
+    return;
+  }
+
+  const dt = Math.min(
+    (timestamp-lastTime)/1000,
+    0.05
+  );
+
+  lastTime = timestamp;
+
+  update(dt);
+  draw();
+  updateUI();
+
+  requestAnimationFrame(loop);
+}
+
+
+/* =========================================================
+   MACHINE D'ÉTAT
+   ========================================================= */
+
+function update(dt){
+
+  if(!target){
+
+    target = selectNextTarget();
+
+    if(!target){
+      return;
+    }
+  }
+
+  if(state==="NAVIGATION"){
+
+    phase = "NAVIGATION";
+
+    moveRobotTowardsTarget(dt);
+
+    const d = distanceBetween(robot,target);
+
+    if(d <= 1.35){
+
+      state = "DOCKING";
+      phase = "APPROCHE DU TRONC";
+
+      dockingStart = performance.now();
+
+      contactReached = false;
+      mechanicalLocked = false;
+      dockingVerified = false;
+
+      dockingData.distance = d;
+      dockingData.pressure = 0;
+    }
+
+    return;
+  }
+
+
+  if(state==="DOCKING"){
+
+    updateDocking();
+
+    return;
+  }
+
+
+  if(state==="AUTORISATION"){
+
+    if(
+      dockingVerified &&
+      contactReached &&
+      mechanicalLocked &&
+      dockingData.pressure >= 90 &&
+      dockingData.distance <= 0.05
+    ){
+
+      state = "AGRICULTURE";
+      phase = "POSITIONNEMENT OUTIL";
+
+      operationStart = performance.now();
+
+      resetAgriculturalVisual();
+    }else{
+
+      state = "DOCKING";
+    }
+
+    return;
+  }
+
+
+  if(state==="AGRICULTURE"){
+
+    updateAgriculturalOperation();
+
+    return;
+  }
+
+
+  if(state==="RELEASE"){
+
+    releaseDocking();
+
+    if(target){
+      target.active = false;
+    }
+
+    target = null;
+
+    const next = selectNextTarget();
+
+    if(next){
+
+      target = next;
+
+      state = "NAVIGATION";
+      phase = "NAVIGATION";
+
+    }else{
+
+      finishMission();
+    }
+
+    return;
+  }
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function moveRobotTowardsTarget(dt){
+
+  const dx = target.x-robot.x;
+  const dy = target.y-robot.y;
+
+  const d = Math.hypot(dx,dy);
+
+  if(d <= 0.001){
+    return;
+  }
+
+  const speed = 10;
+
+  const step = Math.min(
+    speed*dt,
+    d
+  );
+
+  robot.x += dx/d*step;
+  robot.y += dy/d*step;
+}
+
+
+/* =========================================================
+   DOCKING SÉCURISÉ
+   ========================================================= */
+
+function updateDocking(){
+
+  const elapsed =
+    (performance.now()-dockingStart)/1000;
+
+  if(elapsed < 1){
+
+    phase = "APPROCHE DU TRONC";
+
+    dockingData.distance =
+      Math.max(0.80,1.35-elapsed*0.55);
+
+    dockingData.pressure = 0;
+
+    updateDockingStep(1);
+
+  }else if(elapsed < 2){
+
+    phase = "CONTACT TRONC";
+
+    contactReached = true;
+
+    dockingData.distance =
+      Math.max(0.30,0.80-(elapsed-1)*0.5);
+
+    dockingData.pressure =
+      Math.min(25,(elapsed-1)*25);
+
+    updateDockingStep(2);
+
+  }else if(elapsed < 3){
+
+    phase = "STABILISATION";
+
+    contactReached = true;
+
+    dockingData.distance =
+      Math.max(0.12,0.30-(elapsed-2)*0.18);
+
+    dockingData.pressure =
+      25+(elapsed-2)*25;
+
+    updateDockingStep(3);
+
+  }else if(elapsed < 4.2){
+
+    phase = "ARRIMAGE MÉCANIQUE";
+
+    contactReached = true;
+    mechanicalLocked = true;
+
+    dockingData.distance =
+      Math.max(0.05,0.12-(elapsed-3)*0.06);
+
+    dockingData.pressure =
+      Math.min(82,50+(elapsed-3)*27);
+
+    updateDockingStep(4);
+
+  }else if(elapsed < 5.2){
+
+    phase = "CONTRÔLE DE PRESSION";
+
+    contactReached = true;
+    mechanicalLocked = true;
+
+    dockingData.distance = 0.05;
+
+    dockingData.pressure =
+      Math.min(100,82+(elapsed-4.2)*18);
+
+    updateDockingStep(5);
+
+  }else if(elapsed < 6.2){
+
+    phase = "VÉRIFICATION";
+
+    contactReached = true;
+    mechanicalLocked = true;
+
+    dockingData.distance = 0.05;
+    dockingData.pressure = 100;
+
+    updateDockingStep(6);
+
+  }else{
+
+    contactReached = true;
+    mechanicalLocked = true;
+    dockingVerified = true;
+
+    dockingData.distance = 0.05;
+    dockingData.pressure = 100;
+
+    phase = "AUTORISATION";
+
+    updateDockingStep(6);
+
+    document.getElementById("authorization").textContent =
+      "TRAITEMENT AUTORISÉ";
+
+    document.getElementById("authorization").className =
+      "authorization allowed";
+
+    state = "AUTORISATION";
+  }
+}
+
+
+/* =========================================================
+   MODULE AGRICOLE
+   ========================================================= */
+
+function updateAgriculturalOperation(){
+
+  if(
+    !dockingVerified ||
+    !mechanicalLocked ||
+    !contactReached ||
+    dockingData.pressure < 90
+  ){
+
+    phase = "SÉCURITÉ — OPÉRATION BLOQUÉE";
+    return;
+  }
+
+  const elapsed =
+    (performance.now()-operationStart)/1000;
+
+
+  if(elapsed < 1){
+
+    phase = "POSITIONNEMENT OUTIL";
+
+    setAgriStep(1);
+
+    document.getElementById("toolState").textContent =
+      "POSITIONNEMENT";
+
+    document.getElementById("operation").textContent =
+      "POSITIONNEMENT";
+
+  }else if(elapsed < 2){
+
+    phase = "DÉTECTION DE LA ZONE";
+
+    setAgriStep(2);
+
+    document.getElementById("toolState").textContent =
+      "ZONE DÉTECTÉE";
+
+    document.getElementById("operation").textContent =
+      agriculturalMode==="RECOLTE"
+      ? "TASSE LOCALISÉE"
+      : "PANNEAU LOCALISÉ";
+
+    if(agriculturalMode==="RECOLTE"){
+
+      document.getElementById("cupDetection").textContent =
+        "DÉTECTÉE";
+
+      document.getElementById("armState").textContent =
+        "DÉPLOYÉ";
+
+    }else{
+
+      document.getElementById("panelDetection").textContent =
+        "DÉTECTÉ";
+
+      document.getElementById("tappingTool").textContent =
+        "POSITIONNÉ";
+    }
+
+  }else if(elapsed < 3){
+
+    phase = "VÉRIFICATION";
+
+    setAgriStep(3);
+
+    document.getElementById("toolState").textContent =
+      "VÉRIFICATION";
+
+    document.getElementById("operation").textContent =
+      "AUTORISATION CONFIRMÉE";
+
+  }else if(elapsed < 5){
+
+    phase = "OPÉRATION AGRICOLE";
+
+    setAgriStep(4);
+
+    agriculturalOperation = true;
+
+    if(agriculturalMode==="RECOLTE"){
+
+      document.getElementById("toolState").textContent =
+        "BRAS COLLECTEUR ACTIF";
+
+      document.getElementById("operation").textContent =
+        "RÉCOLTE DU FOND DE TASSE";
+
+      document.getElementById("collectionState").textContent =
+        "COLLECTE EN COURS";
+
+    }else{
+
+      document.getElementById("toolState").textContent =
+        "OUTIL EN POSITION";
+
+      document.getElementById("operation").textContent =
+        "SAIGNÉE — SIMULATION";
+
+      document.getElementById("tappingSimulation").textContent =
+        "SIMULATION EN COURS";
+    }
+
+  }else if(elapsed < 6){
+
+    phase = "CONTRÔLE";
+
+    setAgriStep(5);
+
+    document.getElementById("operation").textContent =
+      "CONTRÔLE DU RÉSULTAT";
+
+  }else if(elapsed < 7){
+
+    phase = "FIN D'OPÉRATION";
+
+    setAgriStep(6);
+
+    operationDone = true;
+
+    document.getElementById("operation").textContent =
+      "OPÉRATION TERMINÉE";
+
+    if(agriculturalMode==="RECOLTE"){
+
+      document.getElementById("collectionState").textContent =
+        "COLLECTE TERMINÉE";
+
+    }else{
+
+      document.getElementById("tappingSimulation").textContent =
+        "SIMULATION TERMINÉE";
+    }
+
+  }else{
+
+    if(target){
+      target.treated = true;
+    }
+
+    agriculturalOperation = false;
+
+    phase = "DÉSARRIMAGE";
+
+    document.getElementById("agriAuthorization").textContent =
+      "OPÉRATION VALIDÉE";
+
+    document.getElementById("agriAuthorization").className =
+      "authorization allowed";
+
+    state = "RELEASE";
+  }
+}
+
+
+/* =========================================================
+   VISUEL AGRICOLE
+   ========================================================= */
+
+function resetAgriculturalVisual(){
+
+  document.getElementById("toolState").textContent =
+    "DÉCONNECTÉ";
+
+  document.getElementById("operation").textContent =
+    "AUCUNE";
+
+  document.getElementById("cupDetection").textContent =
+    "EN ATTENTE";
+
+  document.getElementById("armState").textContent =
+    "REPLIÉ";
+
+  document.getElementById("collectionState").textContent =
+    "INACTIVE";
+
+  document.getElementById("panelDetection").textContent =
+    "EN ATTENTE";
+
+  document.getElementById("tappingTool").textContent =
+    "DÉCONNECTÉ";
+
+  document.getElementById("tappingSimulation").textContent =
+    "INACTIVE";
+
+  document.getElementById("agriAuthorization").textContent =
+    "OUTIL EN ATTENTE";
+
+  document.getElementById("agriAuthorization").className =
+    "authorization finished";
+
+  setAgriStep(0);
+}
+
+
+function setAgriStep(step){
+
+  const items =
+    document.querySelectorAll("#agriSteps li");
+
+  items.forEach((item,index)=>{
+
+    item.classList.remove("done","current");
+
+    if(index < step){
+      item.classList.add("done");
+    }
+
+    if(index === step-1){
+      item.classList.add("current");
+    }
+  });
+}
+
+
+/* =========================================================
+   DÉSARRIMAGE
+   ========================================================= */
+
+function releaseDocking(){
+
+  mechanicalLocked = false;
+  contactReached = false;
+  dockingVerified = false;
+
+  dockingData.pressure = 0;
+  dockingData.distance = 1.65;
+
+  agriculturalOperation = false;
+  operationDone = false;
+
+  resetDockingVisual();
+  resetAgriculturalVisual();
+}
+
+
+/* =========================================================
+   FIN DE MISSION
+   ========================================================= */
+
+function finishMission(){
+
+  running = false;
+
+  target = null;
+
+  state = "TERMINÉ";
+  phase = "TERMINÉ";
+
+  mechanicalLocked = false;
+  contactReached = false;
+  dockingVerified = false;
+
+  dockingData.pressure = 0;
+  dockingData.distance = 0;
+
+  agriculturalOperation = false;
+
+  updateDockingStep(6);
+
+  document.getElementById("authorization").textContent =
+    "MISSION TERMINÉE — AUCUN ARBRE ARRIMÉ";
+
+  document.getElementById("authorization").className =
+    "authorization finished";
+
+  document.getElementById("agriAuthorization").textContent =
+    "MISSION TERMINÉE";
+
+  document.getElementById("agriAuthorization").className =
+    "authorization finished";
+
+  document.getElementById("status").textContent =
+    "TERMINÉ";
+
+  document.getElementById("security").textContent =
+    "TRAITEMENT NON ACTIF";
+
+  document.getElementById("toolState").textContent =
+    "DÉCONNECTÉ";
+
+  document.getElementById("operation").textContent =
+    "AUCUNE";
+
+  updateUI();
+  draw();
+}
+
+
+/* =========================================================
+   VISUEL DOCKING
+   ========================================================= */
+
+function resetDockingVisual(){
+
+  const items =
+    document.querySelectorAll("#dockingSteps li");
+
+  items.forEach(item=>{
+    item.classList.remove("done","current");
+  });
+
+  document.getElementById("authorization").textContent =
+    "TRAITEMENT BLOQUÉ";
+
+  document.getElementById("authorization").className =
+    "authorization";
+}
+
+
+function updateDockingStep(step){
+
+  const items =
+    document.querySelectorAll("#dockingSteps li");
+
+  items.forEach((item,index)=>{
+
+    item.classList.remove("done","current");
+
+    if(index < step){
+      item.classList.add("done");
+    }
+
+    if(index === step-1){
+      item.classList.add("current");
+    }
+  });
+}
+
+
+/* =========================================================
+   INTERFACE
+   ========================================================= */
+
+function updateUI(){
+
+  const treated =
+    trees.filter(t=>t.treated).length;
+
+  const total =
+    trees.length;
+
+  const remaining =
+    total-treated;
+
+  document.getElementById("totalTrees").textContent =
+    total;
+
+  document.getElementById("treatedTrees").textContent =
+    treated;
+
+  document.getElementById("remainingTrees").textContent =
+    remaining;
+
+  document.getElementById("robotDistance").textContent =
+    robot.x.toFixed(1)+" m";
+
+  document.getElementById("target").textContent =
+    target ? "ARBRE #"+target.id : "—";
+
+  document.getElementById("phase").textContent =
+    phase;
+
+  document.getElementById("posX").textContent =
+    robot.x.toFixed(2)+" m";
+
+  document.getElementById("posY").textContent =
+    robot.y.toFixed(2)+" m";
+
+  document.getElementById("distance").textContent =
+    state==="TERMINÉ"
+    ? "—"
+    : dockingData.distance.toFixed(2)+" m";
+
+  document.getElementById("pressure").textContent =
+    dockingData.pressure.toFixed(0)+" %";
+
+  document.getElementById("mapDetected").textContent =
+    total+" / "+total;
+
+  document.getElementById("mapTreated").textContent =
+    treated;
+
+  document.getElementById("mapRobot").textContent =
+    robot.x.toFixed(1)+" / "+robot.y.toFixed(1);
+
+  document.getElementById("navTarget").textContent =
+    target ? "ARBRE #"+target.id : "—";
+
+
+  if(state==="TERMINÉ"){
+
+    document.getElementById("security").textContent =
+      "TRAITEMENT NON ACTIF";
+
+  }else if(dockingVerified){
+
+    document.getElementById("security").textContent =
+      "TRAITEMENT AUTORISÉ";
+
+  }else{
+
+    document.getElementById("security").textContent =
+      "TRAITEMENT NON ACTIF";
+  }
+
+
+  if(state==="TERMINÉ"){
+
+    document.getElementById("status").textContent =
+      "TERMINÉ";
+
+  }else if(state==="AGRICULTURE"){
+
+    document.getElementById("status").textContent =
+      "OPÉRATION AGRICOLE";
+
+  }else if(state==="DOCKING"){
+
+    document.getElementById("status").textContent =
+      "DOCKING";
+
+  }else if(state==="NAVIGATION"){
+
+    document.getElementById("status").textContent =
+      "NAVIGATION";
+
+  }else{
+
+    document.getElementById("status").textContent =
+      state;
+  }
+}
+
+
+/* =========================================================
+   DESSIN DE LA CARTE
+   ========================================================= */
+
+function resizeCanvas(){
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  const dpr =
+    window.devicePixelRatio || 1;
+
+  canvas.width =
+    rect.width*dpr;
+
+  canvas.height =
+    rect.height*dpr;
+
+  ctx.setTransform(
+    dpr,0,0,dpr,0,0
+  );
+}
+
+
+function worldToCanvas(x,y){
+
+  const w =
+    canvas.clientWidth;
+
+  const h =
+    canvas.clientHeight;
+
+  return {
+    x:(x/WORLD_W)*w,
+    y:(y/WORLD_H)*h
+  };
+}
+
+
+function drawGrid(){
+
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,.045)";
+
+  ctx.lineWidth = 1;
+
+  for(let x=0;x<=WORLD_W;x+=5){
+
+    const p =
+      worldToCanvas(x,0);
+
+    ctx.beginPath();
+    ctx.moveTo(p.x,0);
+    ctx.lineTo(p.x,h);
+    ctx.stroke();
+  }
+
+  for(let y=0;y<=WORLD_H;y+=5){
+
+    const p =
+      worldToCanvas(0,y);
+
+    ctx.beginPath();
+    ctx.moveTo(0,p.y);
+    ctx.lineTo(w,p.y);
+    ctx.stroke();
+  }
+}
+
+
+function drawTrees(){
+
+  for(const tree of trees){
+
+    const p =
+      worldToCanvas(tree.x,tree.y);
+
+    let radius = 5;
+
+    if(tree.active){
+      radius = 7;
+
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,12,0,Math.PI*2);
+
+      ctx.strokeStyle =
+        "rgba(255,159,67,.35)";
+
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,radius,0,Math.PI*2);
+
+    if(tree.treated){
+      ctx.fillStyle = "#39d98a";
+    }else if(tree.active){
+      ctx.fillStyle = "#ff9f43";
+    }else{
+      ctx.fillStyle = "#d9a62e";
+    }
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      "rgba(255,255,255,.55)";
+
+    ctx.font = "8px Arial";
+
+    ctx.fillText(
+      "#"+tree.id,
+      p.x+7,
+      p.y-5
+    );
+  }
+}
+
+
+function drawRoute(){
+
+  if(!target){
+    return;
+  }
+
+  const r =
+    worldToCanvas(robot.x,robot.y);
+
+  const t =
+    worldToCanvas(target.x,target.y);
+
+  ctx.beginPath();
+
+  ctx.moveTo(r.x,r.y);
+  ctx.lineTo(t.x,t.y);
+
+  ctx.setLineDash([6,6]);
+
+  ctx.strokeStyle =
+    "rgba(73,167,255,.7)";
+
+  ctx.lineWidth = 2;
+
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+}
+
+
+function drawAgriculturalZone(){
+
+  if(!target){
+    return;
+  }
+
+  if(
+    state!=="AGRICULTURE" &&
+    state!=="RELEASE"
+  ){
+    return;
+  }
+
+  const p =
+    worldToCanvas(target.x,target.y);
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    24,
+    0,
+    Math.PI*2
+  );
+
+  ctx.strokeStyle =
+    "rgba(85,230,230,.8)";
+
+  ctx.lineWidth = 2;
+
+  ctx.stroke();
+
+  ctx.beginPath();
+
+  ctx.arc(
+    p.x,
+    p.y,
+    15,
+    0,
+    Math.PI*2
+  );
+
+  ctx.strokeStyle =
+    "rgba(85,230,230,.35)";
+
+  ctx.stroke();
+}
+
+
+function drawRobot(){
+
+  const p =
+    worldToCanvas(robot.x,robot.y);
+
+  ctx.save();
+
+  ctx.translate(p.x,p.y);
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    0,
+    9,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fillStyle =
+    "#49a7ff";
+
+  ctx.shadowBlur = 15;
+  ctx.shadowColor =
+    "rgba(73,167,255,.8)";
+
+  ctx.fill();
+
+  ctx.shadowBlur = 0;
+
+  ctx.beginPath();
+
+  ctx.moveTo(-14,0);
+  ctx.lineTo(14,0);
+
+  ctx.moveTo(0,-14);
+  ctx.lineTo(0,14);
+
+  ctx.strokeStyle =
+    "#bde0ff";
+
+  ctx.lineWidth = 1.5;
+
+  ctx.stroke();
+
+  if(mechanicalLocked){
+
+    ctx.beginPath();
+
+    ctx.arc(
+      0,
+      0,
+      17,
+      0,
+      Math.PI*2
+    );
+
+    ctx.strokeStyle =
+      "#39d98a";
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+
+function draw(){
+
+  const w =
+    canvas.clientWidth;
+
+  const h =
+    canvas.clientHeight;
+
+  ctx.clearRect(0,0,w,h);
+
+  drawGrid();
+  drawRoute();
+  drawAgriculturalZone();
+  drawTrees();
+  drawRobot();
+}
+
+
+/* =========================================================
+   INITIALISATION
+   ========================================================= */
+
+window.addEventListener(
+  "resize",
+  ()=>{
+    resizeCanvas();
+    draw();
+  }
+);
+
+generatePlantation();
+
+resizeCanvas();
+
+updateUI();
+
+draw();
+
+</script>
+
+</body>
+</html>
