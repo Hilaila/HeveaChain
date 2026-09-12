@@ -1,0 +1,2624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeveaChain — V0.8.1</title>
+
+<style>
+:root{
+  --bg:#050a0f;
+  --panel:#0b131b;
+  --panel2:#101c26;
+  --line:#20303d;
+  --green:#29d17d;
+  --green2:#75f0ae;
+  --gold:#e0b84c;
+  --gold2:#ffe49a;
+  --blue:#48a9ff;
+  --red:#ff5964;
+  --orange:#ffad42;
+  --text:#e9f1f5;
+  --muted:#8fa3af;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(35,130,80,.16),transparent 38%),
+    linear-gradient(180deg,#03070b,#071018 55%,#03070b);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(3,8,12,.94);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(10px);
+}
+
+.header-inner{
+  max-width:1450px;
+  margin:auto;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:44px;
+  height:44px;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold2);
+  font-weight:bold;
+  box-shadow:0 0 18px rgba(224,184,76,.18);
+}
+
+.brand strong{
+  display:block;
+  color:var(--gold2);
+}
+
+.brand small{
+  color:var(--muted);
+}
+
+.version{
+  color:var(--green2);
+  font-size:12px;
+  margin-top:3px;
+}
+
+main{
+  max-width:1450px;
+  margin:auto;
+  padding:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:16px;
+}
+
+.card{
+  background:linear-gradient(180deg,rgba(15,27,37,.98),rgba(8,16,23,.98));
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 12px 35px rgba(0,0,0,.2);
+}
+
+.card h2,
+.card h3{
+  margin:0 0 12px;
+}
+
+.card h2{
+  font-size:18px;
+}
+
+.card h3{
+  font-size:15px;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.stat{
+  background:#09131b;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+}
+
+.stat span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.stat strong{
+  display:block;
+  margin-top:5px;
+  font-size:20px;
+}
+
+.map{
+  position:relative;
+  height:430px;
+  overflow:hidden;
+  border-radius:14px;
+  background:
+    radial-gradient(circle at center,rgba(41,209,125,.06),transparent 45%),
+    #050d12;
+  border:1px solid var(--line);
+}
+
+.map::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+
+.tree{
+  position:absolute;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:#607984;
+  transform:translate(-50%,-50%);
+  transition:.25s;
+  z-index:2;
+}
+
+.tree:hover{
+  transform:translate(-50%,-50%) scale(1.7);
+}
+
+.tree.target{
+  background:var(--gold2);
+  box-shadow:0 0 16px var(--gold);
+  width:14px;
+  height:14px;
+}
+
+.tree.done{
+  background:var(--green);
+}
+
+.tree.processing{
+  background:var(--orange);
+  box-shadow:0 0 12px var(--orange);
+}
+
+.tree.error{
+  background:var(--red);
+}
+
+.map-label{
+  position:absolute;
+  left:12px;
+  top:10px;
+  z-index:3;
+  background:rgba(3,8,12,.82);
+  border:1px solid var(--line);
+  padding:8px 10px;
+  border-radius:9px;
+  font-size:12px;
+}
+
+.legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.legend span{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#607984;
+}
+
+.dot.green{background:var(--green)}
+.dot.gold{background:var(--gold2)}
+.dot.orange{background:var(--orange)}
+.dot.red{background:var(--red)}
+
+.physical{
+  margin-top:16px;
+}
+
+.canvas-wrap{
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  background:#04090d;
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.sensor-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+.sensor{
+  background:#081119;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px;
+}
+
+.sensor b{
+  display:block;
+  font-size:12px;
+}
+
+.sensor small{
+  color:var(--muted);
+  display:block;
+  margin-top:4px;
+}
+
+.active{
+  color:var(--green2);
+}
+
+.wait{
+  color:var(--muted);
+}
+
+.warning{
+  color:var(--orange);
+}
+
+.danger{
+  color:var(--red);
+}
+
+.info{
+  color:var(--blue);
+}
+
+.gold{
+  color:var(--gold2);
+}
+
+.state-table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.state-table td{
+  border-bottom:1px solid rgba(255,255,255,.05);
+  padding:8px 4px;
+  font-size:12px;
+}
+
+.state-table td:first-child{
+  color:var(--muted);
+}
+
+.badge{
+  display:inline-block;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:4px 8px;
+  font-size:10px;
+}
+
+.ok{
+  color:var(--green2);
+  border-color:rgba(41,209,125,.35);
+}
+
+.no{
+  color:var(--muted);
+}
+
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+button{
+  border:1px solid var(--line);
+  background:#0b1821;
+  color:var(--text);
+  border-radius:9px;
+  padding:9px 12px;
+  cursor:pointer;
+}
+
+button:hover{
+  border-color:#49616f;
+}
+
+button.primary{
+  background:#123b2b;
+  border-color:#256d4d;
+  color:var(--green2);
+}
+
+button.danger{
+  background:#351217;
+  border-color:#7a2731;
+  color:#ff8790;
+}
+
+.decision{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.decision div{
+  background:#081119;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px;
+}
+
+.decision span{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.decision strong{
+  display:block;
+  margin-top:4px;
+  font-size:14px;
+}
+
+.progress{
+  height:8px;
+  background:#071016;
+  border:1px solid var(--line);
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.progress > div{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#238956,#78efad);
+  transition:.2s;
+}
+
+.step-list{
+  display:grid;
+  gap:6px;
+}
+
+.step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:9px;
+  padding:8px;
+  background:#071017;
+  font-size:11px;
+}
+
+.step-num{
+  width:23px;
+  height:23px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#111d25;
+  color:var(--muted);
+  flex:none;
+}
+
+.step.current{
+  border-color:rgba(224,184,76,.45);
+}
+
+.step.current .step-num{
+  background:#4d3d16;
+  color:var(--gold2);
+}
+
+.step.done{
+  border-color:rgba(41,209,125,.25);
+}
+
+.step.done .step-num{
+  background:#12472f;
+  color:var(--green2);
+}
+
+.param-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.param{
+  background:#071017;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px;
+}
+
+.param label{
+  color:var(--muted);
+  font-size:11px;
+  display:block;
+  margin-bottom:7px;
+}
+
+input[type=range]{
+  width:100%;
+  accent-color:var(--gold);
+}
+
+.value{
+  color:var(--gold2);
+  font-weight:bold;
+}
+
+.tapping-panel{
+  margin-top:12px;
+  border:1px solid rgba(224,184,76,.24);
+  background:
+    linear-gradient(180deg,rgba(43,34,15,.25),rgba(8,16,23,.9));
+  border-radius:12px;
+  padding:12px;
+}
+
+.tapping-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.tapping-header strong{
+  color:var(--gold2);
+}
+
+.panel-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+
+.panel-item{
+  border:1px solid var(--line);
+  background:#071017;
+  border-radius:9px;
+  padding:8px;
+}
+
+.panel-item span{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+}
+
+.panel-item strong{
+  display:block;
+  margin-top:4px;
+  font-size:11px;
+}
+
+.trace{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+
+.trace-item{
+  background:#071017;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:9px;
+}
+
+.trace-item span{
+  color:var(--muted);
+  display:block;
+  font-size:10px;
+}
+
+.trace-item strong{
+  display:block;
+  margin-top:4px;
+  font-size:12px;
+}
+
+.history{
+  max-height:270px;
+  overflow:auto;
+  display:grid;
+  gap:5px;
+}
+
+.history-item{
+  padding:8px;
+  border-radius:8px;
+  background:#071017;
+  border:1px solid rgba(255,255,255,.05);
+  font-size:10px;
+}
+
+.notice{
+  border:1px solid rgba(255,173,66,.3);
+  background:rgba(255,173,66,.06);
+  color:#ffd18f;
+  border-radius:10px;
+  padding:10px;
+  font-size:11px;
+  line-height:1.5;
+}
+
+footer{
+  max-width:1450px;
+  margin:auto;
+  padding:20px;
+  color:var(--muted);
+  text-align:center;
+  font-size:10px;
+}
+
+@media(max-width:1050px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  main{
+    padding:10px;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .sensor-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .decision{
+    grid-template-columns:1fr;
+  }
+
+  .param-grid,
+  .trace{
+    grid-template-columns:1fr;
+  }
+
+  .panel-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .map{
+    height:340px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo">H</div>
+      <div>
+        <strong>HeveaChain</strong>
+        <small>Robot autonome agricole</small>
+        <div class="version">V0.8.1 — Saignée intelligente simulée</div>
+      </div>
+    </div>
+
+    <div class="badge ok" id="headerState">
+      SYSTÈME PRÊT
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="stats">
+    <div class="stat">
+      <span>ARBRES DÉTECTÉS</span>
+      <strong id="treesDetected">91</strong>
+    </div>
+
+    <div class="stat">
+      <span>ARBRES TRAITÉS</span>
+      <strong id="treesDone">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>ARBRES RESTANTS</span>
+      <strong id="treesRemaining">91</strong>
+    </div>
+
+    <div class="stat">
+      <span>ÉNERGIE</span>
+      <strong id="energy">100%</strong>
+    </div>
+
+    <div class="stat">
+      <span>ÉTAT</span>
+      <strong id="missionState">ATTENTE</strong>
+    </div>
+  </section>
+
+
+  <div class="grid">
+
+    <!-- COLONNE GAUCHE -->
+    <div>
+
+      <section class="card">
+        <h2>Cartographie dynamique de la plantation</h2>
+        <div class="sub">
+          Détection des arbres et sélection autonome de la prochaine cible.
+        </div>
+
+        <div class="map" id="map">
+          <div class="map-label">
+            CARTE HEVEACHAIN • 91 ARBRES
+          </div>
+        </div>
+
+        <div class="legend">
+          <span><i class="dot"></i> Non traité</span>
+          <span><i class="dot gold"></i> Cible</span>
+          <span><i class="dot orange"></i> Traitement</span>
+          <span><i class="dot green"></i> Validé</span>
+          <span><i class="dot red"></i> Erreur</span>
+        </div>
+      </section>
+
+
+      <section class="card physical">
+        <h2>Vision physique simulée</h2>
+
+        <div class="sub">
+          Représentation du tronc, du robot, du panneau et de la ligne de saignée.
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="physicalCanvas" width="1000" height="470"></canvas>
+        </div>
+
+        <div class="sensor-grid">
+
+          <div class="sensor">
+            <b>CAMÉRA</b>
+            <small id="cameraStatus">ACTIVE</small>
+          </div>
+
+          <div class="sensor">
+            <b>LiDAR / ToF</b>
+            <small id="lidarStatus">ACTIVE</small>
+          </div>
+
+          <div class="sensor">
+            <b>IMU</b>
+            <small id="imuStatus">STABLE</small>
+          </div>
+
+          <div class="sensor">
+            <b>GNSS-RTK</b>
+            <small id="gnssStatus">POSITION OK</small>
+          </div>
+
+        </div>
+      </section>
+
+
+      <section class="card">
+        <h2>Paramètres de saignée simulée</h2>
+
+        <div class="sub">
+          Paramètre virtuel destiné à la simulation. La valeur réelle devra être
+          validée selon le clone, le panneau et le système de saignée.
+        </div>
+
+        <div class="param-grid">
+
+          <div class="param">
+            <label>
+              ANGLE CIBLE :
+              <span class="value" id="angleValue">30.0°</span>
+            </label>
+
+            <input
+              id="angleSlider"
+              type="range"
+              min="30"
+              max="35"
+              step="0.5"
+              value="30"
+            >
+          </div>
+
+          <div class="param">
+            <label>PLAGE DE SIMULATION</label>
+            <strong class="gold">30° — 35°</strong>
+          </div>
+
+          <div class="param">
+            <label>ORIENTATION</label>
+            <strong class="gold">↘ GAUCHE → DROITE</strong>
+          </div>
+
+          <div class="param">
+            <label>TYPE</label>
+            <strong class="info">SAIGNÉE DESCENDANTE</strong>
+          </div>
+
+        </div>
+
+
+        <div class="tapping-panel">
+
+          <div class="tapping-header">
+            <strong>PANNEAU DE SAIGNÉE</strong>
+            <span class="badge ok" id="tappingPermission">
+              EN ATTENTE
+            </span>
+          </div>
+
+          <div class="panel-grid">
+
+            <div class="panel-item">
+              <span>ANGLE CIBLE</span>
+              <strong id="panelAngle">30.0°</strong>
+            </div>
+
+            <div class="panel-item">
+              <span>PLAGE</span>
+              <strong>30°–35°</strong>
+            </div>
+
+            <div class="panel-item">
+              <span>ORIENTATION</span>
+              <strong>DESC. GAUCHE → DROITE</strong>
+            </div>
+
+            <div class="panel-item">
+              <span>PANNEAU</span>
+              <strong id="panelDetected">EN ATTENTE</strong>
+            </div>
+
+            <div class="panel-item">
+              <span>GABARIT</span>
+              <strong id="templateStatus">EN ATTENTE</strong>
+            </div>
+
+            <div class="panel-item">
+              <span>LIGNE</span>
+              <strong id="lineStatus">EN ATTENTE</strong>
+            </div>
+
+            <div class="panel-item">
+              <span>OUTIL</span>
+              <strong id="toolStatus">EN ATTENTE</strong>
+            </div>
+
+            <div class="panel-item">
+              <span>STABILITÉ</span>
+              <strong id="stabilityStatus">0%</strong>
+            </div>
+
+            <div class="panel-item">
+              <span>SAIGNÉE</span>
+              <strong id="tappingStatus">NON ACTIVE</strong>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+
+      <section class="card">
+
+        <h2>Cycle agricole complet</h2>
+
+        <div class="step-list" id="agriSteps">
+
+          <div class="step" data-step="0">
+            <div class="step-num">1</div>
+            <span>POSITIONNEMENT OUTIL RÉCOLTE</span>
+          </div>
+
+          <div class="step" data-step="1">
+            <div class="step-num">2</div>
+            <span>DÉTECTION DE LA TASSE</span>
+          </div>
+
+          <div class="step" data-step="2">
+            <div class="step-num">3</div>
+            <span>RÉCOLTE DU FOND DE TASSE</span>
+          </div>
+
+          <div class="step" data-step="3">
+            <div class="step-num">4</div>
+            <span>VÉRIFICATION DE LA RÉCOLTE</span>
+          </div>
+
+          <div class="step" data-step="4">
+            <div class="step-num">5</div>
+            <span>LOCALISATION DU PANNEAU</span>
+          </div>
+
+          <div class="step" data-step="5">
+            <div class="step-num">6</div>
+            <span>POSITIONNEMENT OUTIL SAIGNÉE</span>
+          </div>
+
+          <div class="step" data-step="6">
+            <div class="step-num">7</div>
+            <span>SAIGNÉE — SIMULATION</span>
+          </div>
+
+          <div class="step" data-step="7">
+            <div class="step-num">8</div>
+            <span>CONTRÔLE DE LA SAIGNÉE</span>
+          </div>
+
+          <div class="step" data-step="8">
+            <div class="step-num">9</div>
+            <span>VÉRIFICATION FINALE</span>
+          </div>
+
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="sub">PROGRESSION AGRICOLE</div>
+          <div class="progress">
+            <div id="agriProgress"></div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <!-- COLONNE DROITE -->
+    <div>
+
+      <section class="card">
+        <h2>État autonome</h2>
+
+        <table class="state-table">
+          <tr>
+            <td>État robot</td>
+            <td id="robotState">ATTENTE</td>
+          </tr>
+
+          <tr>
+            <td>Cible</td>
+            <td id="target">—</td>
+          </tr>
+
+          <tr>
+            <td>Phase</td>
+            <td id="phase">MISSION EN ATTENTE</td>
+          </tr>
+
+          <tr>
+            <td>Distance arbre</td>
+            <td id="distance">—</td>
+          </tr>
+
+          <tr>
+            <td>Pression docking</td>
+            <td id="pressure">0%</td>
+          </tr>
+
+          <tr>
+            <td>Sécurité</td>
+            <td id="security">TRAITEMENT NON ACTIF</td>
+          </tr>
+        </table>
+      </section>
+
+
+      <section class="card">
+
+        <h2>Décision autonome</h2>
+
+        <div class="decision">
+
+          <div>
+            <span>TARGET</span>
+            <strong id="decisionTarget">—</strong>
+          </div>
+
+          <div>
+            <span>SCORE</span>
+            <strong id="decisionScore">—</strong>
+          </div>
+
+          <div>
+            <span>ACCESSIBILITÉ</span>
+            <strong id="decisionAccess">—</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="card">
+
+        <h2>Docking sécurisé</h2>
+
+        <div class="step-list" id="dockSteps">
+
+          <div class="step" data-step="0">
+            <div class="step-num">1</div>
+            <span>APPROCHE DU TRONC</span>
+          </div>
+
+          <div class="step" data-step="1">
+            <div class="step-num">2</div>
+            <span>CONTACT TRONC</span>
+          </div>
+
+          <div class="step" data-step="2">
+            <div class="step-num">3</div>
+            <span>STABILISATION</span>
+          </div>
+
+          <div class="step" data-step="3">
+            <div class="step-num">4</div>
+            <span>ARRIMAGE MÉCANIQUE</span>
+          </div>
+
+          <div class="step" data-step="4">
+            <div class="step-num">5</div>
+            <span>CONTRÔLE DE PRESSION</span>
+          </div>
+
+          <div class="step" data-step="5">
+            <div class="step-num">6</div>
+            <span>VÉRIFICATION</span>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="card">
+
+        <h2>Traçabilité de l'arbre</h2>
+
+        <div class="trace">
+
+          <div class="trace-item">
+            <span>ARBRE COURANT</span>
+            <strong id="traceTree">—</strong>
+          </div>
+
+          <div class="trace-item">
+            <span>RÉCOLTE</span>
+            <strong id="traceHarvest">—</strong>
+          </div>
+
+          <div class="trace-item">
+            <span>PANNEAU</span>
+            <strong id="tracePanel">—</strong>
+          </div>
+
+          <div class="trace-item">
+            <span>ANGLE</span>
+            <strong id="traceAngle">—</strong>
+          </div>
+
+          <div class="trace-item">
+            <span>SAIGNÉE</span>
+            <strong id="traceTapping">—</strong>
+          </div>
+
+          <div class="trace-item">
+            <span>FINAL</span>
+            <strong id="traceFinal">—</strong>
+          </div>
+
+          <div class="trace-item">
+            <span>DERNIER ARBRE VALIDÉ</span>
+            <strong id="lastValidated">—</strong>
+          </div>
+
+          <div class="trace-item">
+            <span>ÉTAT</span>
+            <strong id="traceState">—</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="card">
+
+        <h2>Historique</h2>
+
+        <div class="history" id="history"></div>
+
+      </section>
+
+
+      <section class="card">
+
+        <h2>Contrôles</h2>
+
+        <div class="buttons">
+
+          <button class="primary" id="startBtn">
+            DÉMARRER MISSION
+          </button>
+
+          <button id="pauseBtn">
+            PAUSE
+          </button>
+
+          <button id="resetBtn">
+            RÉINITIALISER
+          </button>
+
+          <button class="danger" id="emergencyBtn">
+            ARRÊT D’URGENCE
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <section class="card">
+
+        <div class="notice">
+          <strong>MODE SÉCURISÉ — SIMULATION UNIQUEMENT</strong><br><br>
+          Aucune lame n'est activée. Aucune coupe physique n'est exécutée.
+          La récolte et la saignée sont simulées par logiciel.
+          La ligne affichée représente uniquement une trajectoire virtuelle.
+          Toute future saignée réelle nécessitera une validation mécanique,
+          agronomique et de sécurité avant activation.
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+</main>
+
+
+<footer>
+  HeveaChain V0.8.1 — Cartographie • Navigation • Docking • Récolte • Saignée simulée • Traçabilité
+</footer>
+
+
+<script>
+
+/* =========================================================
+   HEVEACHAIN V0.8.1
+   ========================================================= */
+
+const TREE_COUNT = 91;
+
+let trees = [];
+let history = [];
+
+let currentTarget = null;
+
+let missionRunning = false;
+let paused = false;
+let emergency = false;
+
+let state = "ATTENTE";
+
+let energy = 100;
+
+let dockingStep = -1;
+let agriculturalStep = -1;
+
+let operationStart = 0;
+let lastTime = performance.now();
+
+let dockingVerified = false;
+let mechanicalLocked = false;
+
+let panelDetected = false;
+let templateAligned = false;
+let lineAligned = false;
+let toolAligned = false;
+
+let tappingAngle = 30;
+let stability = 0;
+
+let harvestValidated = false;
+let tappingValidated = false;
+let finalValidated = false;
+
+let currentTreeHistory = null;
+let lastValidatedTree = null;
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
+
+const mapEl = $("map");
+const canvas = $("physicalCanvas");
+const ctx = canvas.getContext("2d");
+
+
+/* =========================================================
+   PLANTATION
+   ========================================================= */
+
+function generatePlantation(){
+
+  trees = [];
+
+  for(let i=1;i<=TREE_COUNT;i++){
+
+    const x = 8 + Math.random()*84;
+    const y = 12 + Math.random()*76;
+
+    trees.push({
+      id:`T${String(i).padStart(2,"0")}`,
+      x,
+      y,
+      state:"non-visité",
+      accessible:Math.random() > 0.05,
+      score:0,
+      distance:0
+    });
+  }
+
+  renderMap();
+}
+
+
+function renderMap(){
+
+  mapEl.querySelectorAll(".tree").forEach(el => el.remove());
+
+  trees.forEach(tree => {
+
+    const el = document.createElement("div");
+
+    el.className = "tree";
+
+    if(tree.state === "validé"){
+      el.classList.add("done");
+    }
+
+    if(tree.state === "traitement"){
+      el.classList.add("processing");
+    }
+
+    if(tree.state === "erreur"){
+      el.classList.add("error");
+    }
+
+    if(currentTarget && tree.id === currentTarget.id){
+      el.classList.add("target");
+    }
+
+    el.style.left = tree.x + "%";
+    el.style.top = tree.y + "%";
+
+    el.title = tree.id + " — " + tree.state;
+
+    mapEl.appendChild(el);
+  });
+
+  $("treesDetected").textContent = trees.length;
+
+  const done = trees.filter(t => t.state === "validé").length;
+
+  $("treesDone").textContent = done;
+  $("treesRemaining").textContent = trees.length - done;
+}
+
+
+/* =========================================================
+   NAVIGATION AUTONOME
+   ========================================================= */
+
+function clearNavigationDecision(){
+
+  $("decisionTarget").textContent = "—";
+  $("decisionScore").textContent = "—";
+  $("decisionAccess").textContent = "—";
+}
+
+
+function chooseNextTarget(){
+
+  if(emergency) return;
+
+  const candidates = trees.filter(
+    t => t.state !== "validé" && t.state !== "traitement" && t.accessible
+  );
+
+  if(!candidates.length){
+
+    finishMission();
+    return;
+  }
+
+  candidates.forEach(t => {
+
+    const distance =
+      Math.sqrt(
+        Math.pow(t.x-50,2) +
+        Math.pow(t.y-50,2)
+      );
+
+    t.distance = distance;
+
+    const proximityScore = 100 - Math.min(distance,100);
+
+    t.score =
+      proximityScore +
+      (Math.random()*10);
+  });
+
+  candidates.sort((a,b) => b.score-a.score);
+
+  currentTarget = candidates[0];
+
+  currentTarget.state = "approche";
+
+  $("target").textContent = currentTarget.id;
+
+  $("decisionTarget").textContent = currentTarget.id;
+  $("decisionScore").textContent = currentTarget.score.toFixed(1);
+  $("decisionAccess").textContent =
+    currentTarget.accessible ? "ACCESSIBLE" : "NON ACCESSIBLE";
+
+  renderMap();
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetDocking(){
+
+  dockingStep = -1;
+  dockingVerified = false;
+  mechanicalLocked = false;
+
+  $("pressure").textContent = "0%";
+  $("security").textContent = "TRAITEMENT NON ACTIF";
+
+  updateStepUI("dockSteps",-1);
+}
+
+
+function resetAgricultural(){
+
+  agriculturalStep = -1;
+
+  panelDetected = false;
+  templateAligned = false;
+  lineAligned = false;
+  toolAligned = false;
+
+  stability = 0;
+
+  harvestValidated = false;
+  tappingValidated = false;
+  finalValidated = false;
+
+  $("panelDetected").textContent = "EN ATTENTE";
+  $("templateStatus").textContent = "EN ATTENTE";
+  $("lineStatus").textContent = "EN ATTENTE";
+  $("toolStatus").textContent = "EN ATTENTE";
+  $("stabilityStatus").textContent = "0%";
+  $("tappingStatus").textContent = "NON ACTIVE";
+  $("tappingPermission").textContent = "EN ATTENTE";
+
+  $("traceHarvest").textContent = "—";
+  $("tracePanel").textContent = "—";
+  $("traceAngle").textContent = "—";
+  $("traceTapping").textContent = "—";
+  $("traceFinal").textContent = "—";
+
+  $("agriProgress").style.width = "0%";
+
+  updateStepUI("agriSteps",-1);
+}
+
+
+function resetMission(){
+
+  missionRunning = false;
+  paused = false;
+  emergency = false;
+
+  energy = 100;
+
+  state = "ATTENTE";
+
+  currentTarget = null;
+
+  generatePlantation();
+
+  resetDocking();
+  resetAgricultural();
+
+  clearNavigationDecision();
+
+  $("robotState").textContent = "ATTENTE";
+  $("missionState").textContent = "ATTENTE";
+  $("phase").textContent = "MISSION EN ATTENTE";
+  $("target").textContent = "—";
+  $("distance").textContent = "—";
+
+  $("lastValidated").textContent = lastValidatedTree || "—";
+  $("traceTree").textContent = "—";
+  $("traceState").textContent = "—";
+
+  $("headerState").textContent = "SYSTÈME PRÊT";
+
+  renderMap();
+  drawPhysical();
+}
+
+
+/* =========================================================
+   DOCKING
+   ========================================================= */
+
+function docking(){
+
+  const now = performance.now();
+
+  const elapsed = now - operationStart;
+
+  const step = Math.min(
+    5,
+    Math.floor(elapsed / 900)
+  );
+
+  if(step !== dockingStep){
+
+    dockingStep = step;
+
+    updateStepUI("dockSteps",dockingStep);
+  }
+
+  if(dockingStep >= 0){
+
+    $("phase").textContent = "APPROCHE DU TRONC";
+    $("robotState").textContent = "DOCKING";
+
+    $("distance").textContent =
+      Math.max(0.03,0.40-(elapsed/10000)).toFixed(2)+" m";
+  }
+
+  if(dockingStep >= 1){
+    $("phase").textContent = "CONTACT TRONC";
+  }
+
+  if(dockingStep >= 2){
+
+    $("phase").textContent = "STABILISATION";
+
+    stability = Math.min(
+      100,
+      70 + Math.floor(elapsed/80)
+    );
+
+    $("stabilityStatus").textContent =
+      Math.min(stability,100) + "%";
+  }
+
+  if(dockingStep >= 3){
+
+    mechanicalLocked = true;
+
+    $("phase").textContent = "ARRIMAGE MÉCANIQUE";
+  }
+
+  if(dockingStep >= 4){
+
+    $("phase").textContent = "CONTRÔLE DE PRESSION";
+
+    const pressure = Math.min(
+      100,
+      Math.floor((elapsed-3600)/30)
+    );
+
+    $("pressure").textContent =
+      Math.max(0,pressure) + "%";
+  }
+
+  if(dockingStep >= 5){
+
+    dockingVerified = true;
+
+    $("pressure").textContent = "100%";
+
+    $("security").textContent =
+      "TRAITEMENT AUTORISÉ";
+
+    state = "AGRICULTURE";
+
+    operationStart = now;
+
+    resetAgricultural();
+
+    $("traceTree").textContent =
+      currentTarget.id;
+
+    $("traceState").textContent =
+      "DOCKING VALIDÉ";
+
+    renderMap();
+  }
+}
+
+
+/* =========================================================
+   AGRICULTURE
+   ========================================================= */
+
+function agriculture(){
+
+  const now = performance.now();
+
+  const elapsed = now-operationStart;
+
+  const step = Math.min(
+    8,
+    Math.floor(elapsed/1100)
+  );
+
+  if(step !== agriculturalStep){
+
+    agriculturalStep = step;
+
+    updateStepUI("agriSteps",agriculturalStep);
+  }
+
+  $("agriProgress").style.width =
+    ((agriculturalStep+1)/9*100) + "%";
+
+
+  /* 1 — OUTIL RÉCOLTE */
+
+  if(agriculturalStep >= 0){
+
+    $("phase").textContent =
+      "POSITIONNEMENT OUTIL RÉCOLTE";
+  }
+
+
+  /* 2 — DÉTECTION TASSE */
+
+  if(agriculturalStep >= 1){
+
+    $("phase").textContent =
+      "DÉTECTION DE LA TASSE";
+  }
+
+
+  /* 3 — RÉCOLTE */
+
+  if(agriculturalStep >= 2){
+
+    $("phase").textContent =
+      "RÉCOLTE DU FOND DE TASSE";
+
+    harvestValidated = true;
+
+    $("traceHarvest").textContent =
+      "VALIDÉE";
+  }
+
+
+  /* 4 — CONTRÔLE RÉCOLTE */
+
+  if(agriculturalStep >= 3){
+
+    $("phase").textContent =
+      "VÉRIFICATION DE LA RÉCOLTE";
+  }
+
+
+  /* 5 — LOCALISATION PANNEAU */
+
+  if(agriculturalStep >= 4){
+
+    $("phase").textContent =
+      "LOCALISATION DU PANNEAU";
+
+    panelDetected = true;
+
+    $("panelDetected").textContent =
+      "DÉTECTÉ";
+
+    $("tracePanel").textContent =
+      "LOCALISÉ";
+  }
+
+
+  /* 6 — POSITIONNEMENT SAIGNÉE */
+
+  if(agriculturalStep >= 5){
+
+    $("phase").textContent =
+      "POSITIONNEMENT OUTIL SAIGNÉE";
+
+    templateAligned = true;
+    lineAligned = true;
+    toolAligned = true;
+
+    $("templateStatus").textContent =
+      "ALIGNÉ";
+
+    $("lineStatus").textContent =
+      "ALIGNÉE";
+
+    $("toolStatus").textContent =
+      "POSITIONNÉ";
+
+    $("traceAngle").textContent =
+      tappingAngle.toFixed(1)+"°";
+  }
+
+
+  /* 7 — SAIGNÉE SIMULÉE */
+
+  if(agriculturalStep >= 6){
+
+    $("phase").textContent =
+      "SAIGNÉE — SIMULATION";
+
+    const angleValid =
+      tappingAngle >= 30 &&
+      tappingAngle <= 35;
+
+    const permission =
+      dockingVerified &&
+      mechanicalLocked &&
+      panelDetected &&
+      templateAligned &&
+      lineAligned &&
+      toolAligned &&
+      angleValid &&
+      stability >= 90;
+
+    if(permission){
+
+      $("tappingPermission").textContent =
+        "AUTORISÉE — SIMULATION";
+
+      $("tappingStatus").textContent =
+        "SIMULATION EN COURS";
+
+      $("traceTapping").textContent =
+        "SIMULÉE";
+    }else{
+
+      $("tappingPermission").textContent =
+        "BLOQUÉE";
+
+      $("tappingStatus").textContent =
+        "NON AUTORISÉE";
+    }
+  }
+
+
+  /* 8 — CONTRÔLE */
+
+  if(agriculturalStep >= 7){
+
+    $("phase").textContent =
+      "CONTRÔLE DE LA SAIGNÉE";
+
+    const permission =
+      dockingVerified &&
+      mechanicalLocked &&
+      panelDetected &&
+      templateAligned &&
+      lineAligned &&
+      toolAligned &&
+      tappingAngle >= 30 &&
+      tappingAngle <= 35 &&
+      stability >= 90;
+
+    if(permission){
+
+      tappingValidated = true;
+
+      $("tappingPermission").textContent =
+        "SIMULATION VÉRIFIÉE";
+
+      $("tappingStatus").textContent =
+        "VALIDÉE";
+    }
+  }
+
+
+  /* 9 — FINAL */
+
+  if(agriculturalStep >= 8){
+
+    $("phase").textContent =
+      "VÉRIFICATION FINALE";
+
+    if(harvestValidated && tappingValidated){
+
+      finalValidated = true;
+
+      $("traceFinal").textContent =
+        "VALIDÉE";
+
+      $("traceState").textContent =
+        "ARBRE VALIDÉ";
+
+      operationStart = now;
+
+      state = "RELEASE";
+
+      currentTarget.state = "traitement";
+
+      renderMap();
+    }
+  }
+}
+
+
+/* =========================================================
+   RELEASE
+   ========================================================= */
+
+function releaseTree(){
+
+  const now = performance.now();
+
+  const elapsed = now-operationStart;
+
+  $("phase").textContent =
+    "DÉSARRIMAGE";
+
+  $("pressure").textContent = "0%";
+
+  $("security").textContent =
+    "TRAITEMENT NON ACTIF";
+
+  if(elapsed >= 1000){
+
+    currentTarget.state = "validé";
+
+    lastValidatedTree =
+      currentTarget.id;
+
+    history.unshift({
+      tree:currentTarget.id,
+      harvest:"VALIDÉE",
+      tapping:"SIMULÉE",
+      angle:tappingAngle,
+      final:"VALIDÉE"
+    });
+
+    currentTarget = null;
+
+    renderHistory();
+
+    renderMap();
+
+    resetDocking();
+    resetAgricultural();
+
+    chooseNextTarget();
+
+    if(missionRunning){
+
+      state = "NAVIGATION";
+
+      operationStart = now;
+    }
+  }
+}
+
+
+/* =========================================================
+   MISSION COMPLETE
+   ========================================================= */
+
+function finishMission(){
+
+  missionRunning = false;
+
+  currentTarget = null;
+
+  state = "TERMINÉ";
+
+  $("missionState").textContent =
+    "TERMINÉ";
+
+  $("robotState").textContent =
+    "TERMINÉ";
+
+  $("phase").textContent =
+    "MISSION TERMINÉE";
+
+  $("target").textContent =
+    "—";
+
+  $("distance").textContent =
+    "—";
+
+  $("pressure").textContent =
+    "0%";
+
+  $("security").textContent =
+    "TRAITEMENT NON ACTIF";
+
+  clearNavigationDecision();
+
+  $("headerState").textContent =
+    "MISSION TERMINÉE";
+
+  renderMap();
+}
+
+
+/* =========================================================
+   UPDATE MISSION
+   ========================================================= */
+
+function updateMission(dt){
+
+  if(!missionRunning || paused || emergency){
+    return;
+  }
+
+  energy -= dt*0.00025;
+
+  energy = Math.max(0,energy);
+
+  $("energy").textContent =
+    Math.round(energy)+"%";
+
+
+  if(energy <= 15){
+
+    state = "RETOUR BASE";
+
+    $("phase").textContent =
+      "RETOUR BASE — ÉNERGIE FAIBLE";
+
+    return;
+  }
+
+
+  if(!currentTarget){
+
+    chooseNextTarget();
+    return;
+  }
+
+
+  if(state === "NAVIGATION"){
+
+    $("robotState").textContent =
+      "NAVIGATION";
+
+    $("missionState").textContent =
+      "NAVIGATION";
+
+    $("phase").textContent =
+      "NAVIGATION VERS "+currentTarget.id;
+
+    $("distance").textContent =
+      Math.max(
+        0.05,
+        currentTarget.distance/100
+      ).toFixed(2)+" m";
+
+    state = "DOCKING";
+
+    operationStart = performance.now();
+
+    resetDocking();
+
+    currentTarget.state = "traitement";
+
+    renderMap();
+
+    return;
+  }
+
+
+  if(state === "DOCKING"){
+
+    docking();
+
+    return;
+  }
+
+
+  if(state === "AGRICULTURE"){
+
+    agriculture();
+
+    return;
+  }
+
+
+  if(state === "RELEASE"){
+
+    releaseTree();
+
+    return;
+  }
+}
+
+
+/* =========================================================
+   STEP UI
+   ========================================================= */
+
+function updateStepUI(containerId,current){
+
+  const items =
+    document.querySelectorAll(
+      "#"+containerId+" .step"
+    );
+
+  items.forEach((item,index)=>{
+
+    item.classList.remove(
+      "current",
+      "done"
+    );
+
+    if(index < current){
+      item.classList.add("done");
+    }
+
+    if(index === current){
+      item.classList.add("current");
+    }
+  });
+}
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+function renderHistory(){
+
+  const box = $("history");
+
+  box.innerHTML = "";
+
+  history.forEach(item => {
+
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "history-item";
+
+    div.innerHTML = `
+      <strong>${item.tree}</strong>
+      —
+      Récolte : ${item.harvest}
+      • Saignée : ${item.tapping}
+      • Angle : ${item.angle.toFixed(1)}°
+      • Final : ${item.final}
+    `;
+
+    box.appendChild(div);
+  });
+}
+
+
+/* =========================================================
+   UI GLOBAL
+   ========================================================= */
+
+function updateUI(){
+
+  $("missionState").textContent =
+    state;
+
+  $("robotState").textContent =
+    state;
+
+  if(currentTarget){
+
+    $("target").textContent =
+      currentTarget.id;
+
+    $("traceTree").textContent =
+      currentTarget.id;
+  }
+
+  $("lastValidated").textContent =
+    lastValidatedTree || "—";
+
+  drawPhysical();
+}
+
+
+/* =========================================================
+   DESSIN PHYSIQUE
+   ========================================================= */
+
+function drawPhysical(){
+
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0,0,w,h);
+
+  /* fond */
+
+  const bg =
+    ctx.createLinearGradient(0,0,0,h);
+
+  bg.addColorStop(0,"#071017");
+  bg.addColorStop(1,"#020609");
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,w,h);
+
+
+  /* sol */
+
+  ctx.fillStyle = "#081118";
+
+  ctx.fillRect(
+    0,
+    h-65,
+    w,
+    65
+  );
+
+
+  /* tronc */
+
+  const trunkX = 650;
+  const trunkW = 220;
+
+  const trunkGradient =
+    ctx.createLinearGradient(
+      trunkX,
+      0,
+      trunkX+trunkW,
+      0
+    );
+
+  trunkGradient.addColorStop(
+    0,
+    "#382719"
+  );
+
+  trunkGradient.addColorStop(
+    .5,
+    "#704a29"
+  );
+
+  trunkGradient.addColorStop(
+    1,
+    "#392719"
+  );
+
+  ctx.fillStyle = trunkGradient;
+
+  ctx.beginPath();
+
+  ctx.roundRect(
+    trunkX,
+    35,
+    trunkW,
+    h-80,
+    40
+  );
+
+  ctx.fill();
+
+
+  /* écorce */
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,.08)";
+
+  ctx.lineWidth = 2;
+
+  for(let y=55;y<h-90;y+=34){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      trunkX+20,
+      y
+    );
+
+    ctx.lineTo(
+      trunkX+trunkW-20,
+      y+Math.sin(y)*4
+    );
+
+    ctx.stroke();
+  }
+
+
+  /* panneau */
+
+  const panelX = trunkX+45;
+  const panelY = 130;
+  const panelW = 130;
+  const panelH = 220;
+
+  ctx.fillStyle =
+    "rgba(35,24,15,.62)";
+
+  ctx.beginPath();
+
+  ctx.roundRect(
+    panelX,
+    panelY,
+    panelW,
+    panelH,
+    12
+  );
+
+  ctx.fill();
+
+
+  ctx.strokeStyle =
+    "rgba(224,184,76,.28)";
+
+  ctx.stroke();
+
+
+  /* gabarit */
+
+  if(panelDetected){
+
+    ctx.strokeStyle =
+      "rgba(224,184,76,.7)";
+
+    ctx.setLineDash([8,5]);
+
+    ctx.lineWidth = 3;
+
+    ctx.strokeRect(
+      panelX+8,
+      panelY+8,
+      panelW-16,
+      panelH-16
+    );
+
+    ctx.setLineDash([]);
+  }
+
+
+  /* ligne de saignée */
+
+  if(lineAligned || tappingValidated){
+
+    const angleRad =
+      tappingAngle*Math.PI/180;
+
+    /*
+      Visuellement :
+      gauche = plus haut
+      droite = plus bas
+      donc la ligne descend
+      de gauche vers droite.
+    */
+
+    const startX =
+      panelX+8;
+
+    const endX =
+      panelX+panelW-8;
+
+    const startY =
+      panelY+42;
+
+    const deltaY =
+      Math.tan(angleRad) *
+      (endX-startX);
+
+    const endY =
+      startY + deltaY;
+
+
+    ctx.strokeStyle =
+      tappingValidated
+      ? "#75f0ae"
+      : "#ffe49a";
+
+    ctx.lineWidth = 6;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      startX,
+      startY
+    );
+
+    ctx.lineTo(
+      endX,
+      endY
+    );
+
+    ctx.stroke();
+
+
+    /* ligne gabarit */
+
+    ctx.strokeStyle =
+      "rgba(224,184,76,.28)";
+
+    ctx.lineWidth = 12;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      startX,
+      startY
+    );
+
+    ctx.lineTo(
+      endX,
+      endY
+    );
+
+    ctx.stroke();
+  }
+
+
+  /* tasse */
+
+  ctx.fillStyle =
+    "#bd8d38";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    trunkX+110,
+    365,
+    58,
+    22,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle =
+    "#d6b65b";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    trunkX+110,
+    359,
+    46,
+    14,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* robot */
+
+  const robotX = 280;
+  const robotY = 225;
+
+  ctx.fillStyle =
+    "#142630";
+
+  ctx.strokeStyle =
+    "#3b697b";
+
+  ctx.lineWidth = 3;
+
+  ctx.beginPath();
+
+  ctx.roundRect(
+    robotX-95,
+    robotY-55,
+    190,
+    110,
+    25
+  );
+
+  ctx.fill();
+  ctx.stroke();
+
+
+  /* tête/caméra */
+
+  ctx.fillStyle =
+    "#071017";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    robotX,
+    robotY-5,
+    30,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.stroke();
+
+
+  ctx.fillStyle =
+    "#48a9ff";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    robotX,
+    robotY-5,
+    10,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* bras agricole */
+
+  ctx.strokeStyle =
+    "#b6c4ca";
+
+  ctx.lineWidth = 12;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    robotX+75,
+    robotY
+  );
+
+  ctx.lineTo(
+    robotX+165,
+    robotY+20
+  );
+
+  ctx.lineTo(
+    panelX-10,
+    panelY+45
+  );
+
+  ctx.stroke();
+
+
+  /* pince gauche */
+
+  ctx.strokeStyle =
+    "#c8d5da";
+
+  ctx.lineWidth = 9;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    trunkX-10,
+    robotY-35
+  );
+
+  ctx.lineTo(
+    trunkX-55,
+    robotY-5
+  );
+
+  ctx.stroke();
+
+
+  /* pince droite */
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    trunkX-10,
+    robotY+35
+  );
+
+  ctx.lineTo(
+    trunkX-55,
+    robotY+5
+  );
+
+  ctx.stroke();
+
+
+  /* indicateur docking */
+
+  if(dockingVerified){
+
+    ctx.fillStyle =
+      "#75f0ae";
+
+    ctx.font =
+      "bold 18px Arial";
+
+    ctx.fillText(
+      "DOCKING VALIDÉ",
+      50,
+      55
+    );
+  }
+
+
+  /* indicateur saignée */
+
+  if(tappingValidated){
+
+    ctx.fillStyle =
+      "#75f0ae";
+
+    ctx.font =
+      "bold 17px Arial";
+
+    ctx.fillText(
+      "SAIGNÉE SIMULÉE — VALIDÉE",
+      50,
+      85
+    );
+  }
+
+
+  /* angle */
+
+  if(lineAligned){
+
+    ctx.fillStyle =
+      "#ffe49a";
+
+    ctx.font =
+      "bold 16px Arial";
+
+    ctx.fillText(
+      "ANGLE : "+tappingAngle.toFixed(1)+"°",
+      50,
+      h-30
+    );
+  }
+
+
+  /* état */
+
+  ctx.fillStyle =
+    "#8fa3af";
+
+  ctx.font =
+    "13px Arial";
+
+  ctx.fillText(
+    "HeveaChain — représentation physique simulée",
+    50,
+    h-50
+  );
+}
+
+
+/* =========================================================
+   SLIDER ANGLE
+   ========================================================= */
+
+$("angleSlider").addEventListener(
+  "input",
+  function(){
+
+    tappingAngle =
+      parseFloat(this.value);
+
+    $("angleValue").textContent =
+      tappingAngle.toFixed(1)+"°";
+
+    $("panelAngle").textContent =
+      tappingAngle.toFixed(1)+"°";
+
+    $("traceAngle").textContent =
+      tappingAngle.toFixed(1)+"°";
+
+    drawPhysical();
+  }
+);
+
+
+/* =========================================================
+   COMMANDES
+   ========================================================= */
+
+$("startBtn").addEventListener(
+  "click",
+  ()=>{
+
+    if(emergency){
+      return;
+    }
+
+    if(state === "TERMINÉ"){
+      resetMission();
+    }
+
+    missionRunning = true;
+    paused = false;
+
+    state = "NAVIGATION";
+
+    $("headerState").textContent =
+      "MISSION ACTIVE";
+
+    chooseNextTarget();
+  }
+);
+
+
+$("pauseBtn").addEventListener(
+  "click",
+  ()=>{
+
+    if(!missionRunning){
+      return;
+    }
+
+    paused = !paused;
+
+    $("pauseBtn").textContent =
+      paused ? "REPRENDRE" : "PAUSE";
+
+    $("headerState").textContent =
+      paused ? "PAUSE" : "MISSION ACTIVE";
+  }
+);
+
+
+$("resetBtn").addEventListener(
+  "click",
+  ()=>{
+    resetMission();
+  }
+);
+
+
+$("emergencyBtn").addEventListener(
+  "click",
+  ()=>{
+
+    emergency = true;
+
+    missionRunning = false;
+
+    state = "ARRÊT D’URGENCE";
+
+    $("missionState").textContent =
+      "ARRÊT";
+
+    $("robotState").textContent =
+      "ARRÊT D’URGENCE";
+
+    $("phase").textContent =
+      "SYSTÈME ARRÊTÉ";
+
+    $("pressure").textContent =
+      "0%";
+
+    $("security").textContent =
+      "TRAITEMENT NON ACTIF";
+
+    clearNavigationDecision();
+
+    $("headerState").textContent =
+      "ARRÊT D’URGENCE";
+
+    drawPhysical();
+  }
+);
+
+
+/* =========================================================
+   BOUCLE
+   ========================================================= */
+
+function loop(now){
+
+  const dt =
+    now-lastTime;
+
+  lastTime = now;
+
+  updateMission(dt);
+
+  updateUI();
+
+  requestAnimationFrame(loop);
+}
+
+
+/* =========================================================
+   INITIALISATION
+   ========================================================= */
+
+generatePlantation();
+
+resetDocking();
+resetAgricultural();
+
+renderHistory();
+
+clearNavigationDecision();
+
+drawPhysical();
+
+requestAnimationFrame(loop);
+
+</script>
+
+</body>
+</html>
